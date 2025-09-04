@@ -3,6 +3,8 @@ package jhos.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// Ólafur Kristófer okh4@hi.is
+
 @SpringBootApplication
 public class BigProjectApplication {
 
