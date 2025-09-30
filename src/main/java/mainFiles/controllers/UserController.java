@@ -1,12 +1,9 @@
 package mainFiles.controllers;
 
-import org.springframework.stereotype.Controller;
 import mainFiles.Service.UserService;
 
-@Controller
 public class UserController {
     private UserService userService;
-    
 
     public void createNewUser(){
         userService.save();
@@ -45,6 +42,4 @@ public class UserController {
     public void unfollow(){
         userService.unfollow();
     }
-
-
 }

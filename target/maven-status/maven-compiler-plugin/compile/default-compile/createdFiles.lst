@@ -3,11 +3,15 @@ mainFiles/controllers/NotificationController.class
 mainFiles/controllers/SearchController.class
 mainFiles/controllers/UserController.class
 mainFiles/Data/PostData.class
+mainFiles/Service/CommentService.class
 mainFiles/Data/CommentData.class
 mainFiles/objects/User.class
+mainFiles/Service/UserService.class
 mainFiles/controllers/FeedController.class
+mainFiles/Data/FollowerData.class
 mainFiles/Data/UserData.class
 mainFiles/objects/Post.class
 mainFiles/objects/Notification.class
 mainFiles/objects/Comment.class
 mainFiles/controllers/AuthController.class
+mainFiles/Service/SearchController.class

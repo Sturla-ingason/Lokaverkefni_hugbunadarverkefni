@@ -7,14 +7,15 @@ import lombok.Setter;
 @Setter
 public class User {
     //Global variables fyrir User
-    String username = "test";
-
-    String email;
-    String password;
+    @Getter
+    @Setter
+    private String username;
+    private String email;
+    private String password;
+    private int userID;
+    private String bio;
+    private int profilePicture;
 
     //Methods fyrir User
-    public String getUsername(){
-        return username;
-    }
 
 }

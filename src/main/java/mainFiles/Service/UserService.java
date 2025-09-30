@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 
 import mainFiles.Data.FollowerData;
 import mainFiles.Data.UserData;
+import mainFiles.objects.User;
 
 @Service
 public class UserService{
     private UserData userData;
     private FollowerData followerData;
+    private User user;
+    
 
     public void save() {
         
