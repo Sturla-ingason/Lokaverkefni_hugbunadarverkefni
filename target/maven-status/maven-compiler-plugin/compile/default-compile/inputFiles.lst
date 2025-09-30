@@ -1,0 +1,15 @@
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/BigProjectApplication.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/Data/CommentData.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/Data/PostData.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/Data/UserData.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/AuthController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/CommentController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/FeedController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/NotificationController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/PostController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/SearchController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/controllers/UserController.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/objects/Comment.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/objects/Notification.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/objects/Post.java
+/Users/sturlaingason/Documents/HI/Haust_2025/Hugbunadarverkefni_1/Lokaverkefni_hugbunadarverkefni/src/main/java/mainFiles/objects/User.java
