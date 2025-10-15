@@ -1,5 +1,5 @@
 # ---- build stage ----
-FROM maven:3.8.7-openjdk-18 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # cache deps
@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn -B -q -DskipTests package
 
 # ---- run stage ----
-FROM openjdk:18-ea-8-jdk-slim
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
