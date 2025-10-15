@@ -1,8 +1,16 @@
 package mainFiles.Data;
 
-import lombok.Data;
+import org.springframework.stereotype.Repository;
 
-@Data
+import mainFiles.objects.User;
+
+@Repository
 public class UserData {
+
+    public void saveNewUser(User user){
+
+        
+        
+    }
 
 }
