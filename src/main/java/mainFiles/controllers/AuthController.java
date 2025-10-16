@@ -1,8 +1,8 @@
 package mainFiles.controllers;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class AuthController {
     //TODO SignUpp() method
         //Should take in 
@@ -12,4 +12,9 @@ public class AuthController {
         //Should randomly make a id for the user.
         //needs to check in the data base if the random user id allready exists
         //if not we let the user have that id. If it does exist we generate a new one and check again.
+
+    public void SignUpp(String username, String password, String email){
+        
+    }
+
 }

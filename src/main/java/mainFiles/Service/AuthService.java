@@ -3,7 +3,7 @@ package mainFiles.Service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthController {
+public class AuthService {
     
 
     

@@ -2,6 +2,7 @@ package mainFiles.Service;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import mainFiles.Data.FollowerData;
 import mainFiles.Data.UserData;
 import mainFiles.objects.User;
@@ -10,49 +11,51 @@ import mainFiles.objects.User;
 public class UserService{
     private UserData userData;
     private FollowerData followerData;
-    private User user;
     
 
-    public void save() {
-        userData.saveNewUser(user);
+    public void save(User user) {
+        userData.save(user);
     }
 
     
-    public void deleate(){
-
+    public void deleate(User user){
+        userData.delete(user);
     }
 
-    public void updateEmail(){
-
-    }
-
-
-    public void updateUsername(){
-
+    @Transactional
+    public void updateEmail(User user, String newEmail){
+        user.setEmail(newEmail);
     }
 
 
-    public void updatePassword(){
-
+    public void updateUsername(User user, String NewUsername){
+        user.setUsername(NewUsername);
     }
 
 
-    public void resetpassword(){
+    @Transactional
+    public void updatePassword(User user, String newPassword){
+        user.setPassword(newPassword);
+    }
 
+    @Transactional
+    public void resetpassword(String email, String newPassword){
+        User user = userData.findByEmail(email);
+        user.setPassword(newPassword);
     }
 
 
-    public void follow(){
-
+    public void follow(User user, User userToFollow){
+        followerData.save(user.getUserID(), userToFollow.getUserID());
     }
 
 
-    public void unfollow(){
-
+    public void unfollow(User user, User userToUnfollow){
+        
     }
 
 
-    public void getFollowerAmountU(){
+    public void getFollowerAmountU(User user){
 
     }
 
