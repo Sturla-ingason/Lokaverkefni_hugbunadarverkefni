@@ -1,6 +1,12 @@
 package mainFiles.Data;
 
+import org.springframework.stereotype.Repository;
 
-public class FollowerData {
+@Repository
+public interface FollowerData{
+
+    void save(int userID, int userID2);
     
+
+
 }
