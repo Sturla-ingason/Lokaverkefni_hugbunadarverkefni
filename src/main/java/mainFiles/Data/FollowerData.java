@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FollowerData{
 
-    void save(int userID, int userID2);
+    void save(String userID, String userID2);
     
 
 

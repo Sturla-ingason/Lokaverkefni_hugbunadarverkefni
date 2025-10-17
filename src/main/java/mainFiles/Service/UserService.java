@@ -108,7 +108,9 @@ public class UserService{
 
 
     /*
-     * 
+     * Allows a user to update their bio on the service
+     * @param user The user who want's to update their bio
+     * @param bio New and updated bio from the user
      */
     public void updateBio(User user, String bio){
         if(user == null){
@@ -120,7 +122,7 @@ public class UserService{
 
 
     /*
-     * 
+     * Allows the user to update their profile picture
      */
     public void updateProfilePicture(User user){
 
