@@ -1,6 +1,7 @@
 package mainFiles.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
+import mainFiles.objects.User;
 
 import mainFiles.Service.AuthService;
 
@@ -10,7 +11,10 @@ public class AuthController {
 
 
     /*
-     * 
+     * Allows a user to create a account with our service
+     * @param username : The name a user want's to user for their account
+     * @param password : The password a user want's to use for their account
+     * @param email : The email connected to the user's account
      */
     public void SignUpp(String username, String password, String email){
         authService.signUpp(email, password, username);
@@ -18,18 +22,21 @@ public class AuthController {
 
 
     /*
-     * 
+     * Allows a existing user to logg inn to their account
+     * @param email : The email of the users account
+     * @param password : The password of the users account
      */
-    public void logInn(){
-        authService.logInn();
+    public void logInn(String email, String password){
+        authService.logInn(email, password);
     }
 
 
     /*
-     * 
+     * Allows a loged inn user to log out of the service
+     * @param user : The user who want's to log out
      */
-    public void logOut(){
-        authService.logOut();
+    public void logOut(User user){
+        authService.logOut(user);
     }
 
 }

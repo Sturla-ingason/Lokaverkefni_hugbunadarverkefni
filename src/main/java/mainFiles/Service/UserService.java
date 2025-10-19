@@ -138,7 +138,7 @@ public class UserService{
      * @param userToFollow
      */
     public void follow(User user, User userToFollow){
-        followerData.save(user.getUserID(), userToFollow.getUserID());
+        
     }
 
 
