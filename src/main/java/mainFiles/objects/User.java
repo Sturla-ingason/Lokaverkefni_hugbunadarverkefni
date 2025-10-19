@@ -9,12 +9,13 @@ import jakarta.persistence.*;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "User")
 public class User {
     //Global variables fyrir User
     @Id
-    private int userID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String userID;
     
     private String username;
     private String email;
@@ -23,5 +24,12 @@ public class User {
     private int imageId;
 
     //Methods fyrir User
+
+    public User(String userID, String username, String email, String password){
+        this.userID = userID;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
 }
