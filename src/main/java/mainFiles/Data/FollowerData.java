@@ -1,6 +1,9 @@
 package mainFiles.Data;
 
+import mainFiles.objects.User;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface FollowerData{
