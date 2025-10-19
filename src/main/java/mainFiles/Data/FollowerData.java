@@ -5,9 +5,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FollowerData{
 
-    //TODO be able to follow another user.
+    void save(int userID, int userID2);
 
-    //TODO be able to unfollow a user.
+    void delete(int userID, int userID2);
+
+    //TODO be able to follow another user.
 
     //TODO be able to get all the followers of a user.
 
