@@ -15,7 +15,7 @@ public class User {
     //Global variables fyrir User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userID;
+    private String userID;
     
     private String username;
     private String email;
@@ -25,7 +25,8 @@ public class User {
 
     //Methods fyrir User
 
-    public User(String username, String email, String password){
+    public User(String userID, String username, String email, String password){
+        this.userID = userID;
         this.username = username;
         this.email = email;
         this.password = password;
