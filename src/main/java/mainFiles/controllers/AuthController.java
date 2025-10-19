@@ -15,6 +15,7 @@ public class AuthController {
      * @param username : The name a user want's to user for their account
      * @param password : The password a user want's to use for their account
      * @param email : The email connected to the user's account
+     * @return The new user that was just created
      */
     public User SignUpp(String username, String password, String email){
         User user = authService.signUpp(email, password, username);
