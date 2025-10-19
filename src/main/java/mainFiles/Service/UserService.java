@@ -147,8 +147,26 @@ public class UserService{
      * @param user
      * @param userToUnfollow
      */
+    @Transactional
     public void unfollow(User user, User userToUnfollow){
+        if (user == null || userToUnfollow == null) {
+            throw new IllegalArgumentException("Users cannot be null"); 
+        }
         
+    int userId;
+    int targetId;
+    try {
+        userId = Integer.parseInt(user.getUserID());
+        targetId = Integer.parseInt(userToUnfollow.getUserID());
+    } catch (NumberFormatException nfe) {
+        throw new IllegalArgumentException("User IDs must be numeric", nfe);
+    }
+
+    if (userId == targetId) {
+        return; 
+    }
+
+    followerData.delete(userId, targetId);
     }
 
 

@@ -7,6 +7,8 @@ import java.util.List;
 
 @Repository
 public interface FollowerData{
+  
+    void save(int userID, int userID2);
 
     void followUser(Integer userID, Integer followerID);
     void unfollowUser(Integer userID,  Integer followerID);
