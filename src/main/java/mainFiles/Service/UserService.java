@@ -112,12 +112,16 @@ public class UserService{
      * @param user The user who want's to update their bio
      * @param bio New and updated bio from the user
      */
-    public void updateBio(User user, String bio){
-        if(user == null){
-            throw new IllegalArgumentException("There is no user");
+    @Transactional
+    public void updateBio(String userId, String bio) {
+        User user = userData.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("There is no user"));
+
+        if (bio == null) {
+            throw new IllegalArgumentException("Bio cannot be null");
         }
 
-
+        user.setBio(bio);
     }
 
 
@@ -125,7 +129,7 @@ public class UserService{
      * Allows the user to update their profile picture
      */
     public void updateProfilePicture(User user){
-
+        
     }
 
 

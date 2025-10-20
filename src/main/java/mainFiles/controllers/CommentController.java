@@ -7,10 +7,14 @@ import mainFiles.objects.Comment;
 
 @RestController
 @RequestMapping(path = "/comment")
-@RequiredArgsConstructor
 public class CommentController {
 
-    private CommentService commentService;
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService){
+        this.commentService = commentService;
+    }
+
 
     @PostMapping("/create")
     public Comment createComment(@RequestParam Integer postId,
@@ -18,4 +22,11 @@ public class CommentController {
             @RequestParam String text) {
         return commentService.createComment(postId, userId, text);
     }
+
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Integer commentId,
+                          @RequestParam String userId) {
+    commentService.deleteComment(commentId, userId);
+}
+
 }
