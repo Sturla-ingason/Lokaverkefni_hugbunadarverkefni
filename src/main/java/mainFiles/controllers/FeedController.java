@@ -12,17 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/feed")
 public class FeedController {
-    private final FeedService feedService;
-    private final UserService userService;
 
     @Autowired
-    public FeedController(FeedService feedService, UserService userService) {
-        this.feedService = feedService;
-        this.userService = userService;
-    }
+    private FeedService feedService;
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping(value = "/feed")
+    /**
+     * Gets the feed for the current user
+     * @param session The ongoing session
+     * @return The users feed as a list og posts
+     */
+    @RequestMapping("/getfeed")
     public List<Post> getFeed(HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         return feedService.generateFeed(user);

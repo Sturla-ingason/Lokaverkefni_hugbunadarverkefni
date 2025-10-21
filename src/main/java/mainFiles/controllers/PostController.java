@@ -13,16 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PostController {
 
-    private final PostService postService;
-    private final UserService userService;
-
     @Autowired
-    public PostController(PostService postService,  UserService userService) {
-        this.postService = postService;
-        this.userService = userService;
-    }
+    private PostService postService;
+    @Autowired
+    private UserService userService;
 
-
+    /**
+     * Creates a new post
+     * @param post What the post should contain
+     * @param session The current session
+     * @return The created post
+     */
     @PostMapping("/posts")
     public Post createPost(@RequestBody Post post, HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
