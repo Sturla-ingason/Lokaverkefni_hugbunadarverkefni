@@ -1,6 +1,13 @@
 package mainFiles.controllers;
 
-import org.springframework.stereotype.Controller;
+import jakarta.servlet.http.HttpSession;
+import mainFiles.Service.AuthService;
+import mainFiles.Service.UserService;
+import mainFiles.objects.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import mainFiles.Service.UserService;
@@ -15,13 +22,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import mainFiles.objects.User;
+import java.util.List;
 
 
 @RestController
 @RequestMapping(path="/user")
 public class UserController {
-    private UserService userService;
-    private AuthService authService;
+    private final UserService userService;
+    private final AuthService authService;
+
+    @Autowired
+    public UserController(UserService userService, AuthService authService) {this.userService = userService; this.authService = authService;}
 
     public String requestMethodName(@RequestParam String param) {
         return new String();
@@ -31,9 +42,12 @@ public class UserController {
         authService.signUpp(email, password, userName);
     }
 
-
-    public void deleateUser(User user){
-        userService.deleate(user);
+    @PostMapping("/delete")
+    public String deleteUser(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        String username = user.getUsername();
+        userService.delete(user);
+        return "User " + username + " has been deleted";
     }
 
 
@@ -55,14 +69,33 @@ public class UserController {
         userService.updatePassword(user, newPassword);
     }
 
-
-    public void follow(User user, User user2){
-        userService.follow(user, user2);
+    @PostMapping("/follow")
+    public void follow(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.follow(user, userID);
     }
 
+    @PostMapping("/unfollow")
+    public void unfollow(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.unfollow(user, userID);
+    }
 
-    public void unfollow(User user, User user2){
-        userService.unfollow(user, user2);
+    @PostMapping("/allfollowers")
+    public List<User> getAllFollowers(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowers();
+    }
+    @PostMapping("/allfollowing")
+    public List<User> getAllFollowing(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowing();
+    }
+
+    @PostMapping("/removefollower")
+    public void removeFollower(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.removeFollower(user, userID);
     }
 
     @RequestMapping("/bio")

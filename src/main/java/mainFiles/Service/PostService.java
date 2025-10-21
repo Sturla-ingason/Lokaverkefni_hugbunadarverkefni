@@ -4,10 +4,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import mainFiles.Data.PostData;
 import mainFiles.objects.Post;
+import mainFiles.objects.User;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
-
     private final PostData postData;
 
     public PostService(PostData postData) {
@@ -36,6 +37,8 @@ public class PostService {
         //save 
         postData.save(post);
     }
+    public Post createNewPost(User user, String description) {
+        Post p = new Post(user, description);
 
     /**
      * Remove a like from a post from the user

@@ -11,6 +11,8 @@ import mainFiles.Data.UserData;
 import mainFiles.objects.Comment;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -34,14 +36,14 @@ public class CommentService {
      * @return the saved Comment
      */
     @Transactional
-    public Comment createComment(Integer postId, Integer userId, String text) {
+    public Comment createComment(Integer postId, int userId, String text) {
         // check text
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException("Comment text cannot be empty");
         }
     
         // check user
-        User user = userData.findByUserID(userId);
+        User user = userData.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
