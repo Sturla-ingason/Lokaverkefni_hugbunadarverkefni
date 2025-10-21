@@ -1,9 +1,7 @@
 package mainFiles.objects;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "Posts")
 public class Post {
 
@@ -19,9 +18,20 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postID;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(name = "user_userid", nullable = false)
+    private String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_userid",
+            referencedColumnName = "userID",
+            insertable = false,
+            updatable = false
+    )
+    @NonNull
     private User user;
 
+    @NonNull
     private String description;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)

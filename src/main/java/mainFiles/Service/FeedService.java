@@ -1,33 +1,40 @@
 package mainFiles.Service;
 
-import lombok.RequiredArgsConstructor;
-import mainFiles.Data.CommentData;
-import mainFiles.Data.FollowerData;
+import jakarta.transaction.Transactional;
+import lombok.NoArgsConstructor;
 import mainFiles.Data.PostData;
+import mainFiles.Data.UserData;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class FeedService {
-    private PostData postData;
-    private CommentData commentData;
-    private FollowerData followerData;
 
-    public List<Post> generateFeed(Integer userID){
-        if (followerData.getAllFollowedByUser(userID) != null){
-            List<User> followedUsers = followerData.getAllFollowedByUser(userID);
-            List<Post> posts = new ArrayList<>();
-            for (User user : followedUsers){posts.addAll(postData.getAllPostsByUser(user));}
-            return posts;
-        } else {
-            return Collections.emptyList();
-        }
+    @Autowired
+    private PostData postData;
+    @Autowired
+    private UserData userData;
+    @Autowired
+    private UserService userService;
+
+//    public FeedService(PostData postData, UserData userData, UserService userService) {
+//        this.postData = postData;
+//        this.userData = userData;
+//        this.userService = userService;
+//    }
+
+    @Transactional
+    public List<Post> generateFeed(User user){
+        List<User> followedUsers = userService.getAllFollowedByUser(user);
+        List<Post> posts =  new ArrayList<>();
+        for (User u : followedUsers) {posts.addAll(postData.findAllByUserId(String.valueOf(u.getUserID())));}
+        return posts;
     }
 
     //TODO

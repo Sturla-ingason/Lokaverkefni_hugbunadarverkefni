@@ -1,36 +1,16 @@
 package mainFiles.Data;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
-import jakarta.transaction.Transactional;
 import mainFiles.objects.User;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 
 
 
 @Repository
-public interface UserData extends JpaRepository<User, String> {
+public interface UserData extends JpaRepository<User, Integer> {
 
-    /*
-     * Saves user to database
-     * @param user : The user to save into the database
-     * @return The user that has been saved
-     */
-    User save(User user);
-
-
-    /*
-     * Deleates user from database
-     * @param user : The user to be deleated
-     */
-    void delete(User user);
-
-
+    User findById(int userId);
     /*
      * Finds users by their email address
      * @param email : The email address connected to the user
@@ -45,7 +25,7 @@ public interface UserData extends JpaRepository<User, String> {
      * @param password : The password connected to the user
      * @return The user connected to the email and password
      */
-    User findByEmailAndByPassword(String email, String password);
+    User findByEmailAndPassword(String email, String password);
 
 
     /*
@@ -53,7 +33,7 @@ public interface UserData extends JpaRepository<User, String> {
      * @param userID : The user's ID
      * @return A user connected to that ID
      */
-    User findByUserID(String userID);
+    //User findByUserID(String userID);
 
 
         //@Modifying
@@ -61,5 +41,5 @@ public interface UserData extends JpaRepository<User, String> {
     //@Query("UPDATE User u SET u.password = :password WHERE u.username = :username")
     //int updatePasswordByUsername(@Param("username") String username, @Param("password") String password);
 
-    User findByEmail(String email);
+    //User findByEmail(String email);
 }

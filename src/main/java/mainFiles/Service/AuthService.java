@@ -1,18 +1,18 @@
 package mainFiles.Service;
 
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-import mainFiles.objects.User;
 import mainFiles.Data.UserData;
+import mainFiles.objects.User;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @Service
 public class AuthService {
     private UserData userData;
 
-    public AuthService(){
-        
+    public AuthService(UserData userData) {
+        this.userData = userData;
     }
     
     /*
@@ -27,9 +27,9 @@ public class AuthService {
             throw new IllegalArgumentException("Missing input");
         }
 
-        String uuid = generateNewUserID();
+        //String uuid = generateNewUserID();
 
-        User user = new User(uuid, userName, email, password);
+        User user = new User(userName, email, password);
         userData.save(user);
 
         return user;
@@ -46,7 +46,7 @@ public class AuthService {
             throw new IllegalArgumentException("Missing Input");
         }
 
-        User user = userData.findByEmailAndByPassword(email, password);
+        User user = userData.findByEmailAndPassword(email, password);
         return user;
     }
 
@@ -65,6 +65,5 @@ public class AuthService {
     public String generateNewUserID(){
         return UUID.randomUUID().toString();
     }
-
     
 }

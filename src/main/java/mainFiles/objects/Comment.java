@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Optional;
+
 @Entity
 @Getter
 @Setter
@@ -31,4 +33,6 @@ public class Comment {
         this.comment = comment;
     }
 
+    public Comment(Optional<User> user, Post post, String text) {
+    }
 }

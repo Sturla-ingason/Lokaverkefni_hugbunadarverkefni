@@ -1,44 +1,62 @@
 package mainFiles.controllers;
 
-import org.springframework.web.bind.annotation.RestController;
-import mainFiles.objects.User;
-
+import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.AuthService;
+import mainFiles.Service.UserService;
+import mainFiles.objects.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
+
+    @Autowired
     private AuthService authService;
+    @Autowired
+    private UserService userService;
 
-
-    /*
-     * Allows a user to create a account with our service
-     * @param username : The name a user want's to user for their account
-     * @param password : The password a user want's to use for their account
-     * @param email : The email connected to the user's account
-     * @return The new user that was just created
+    /**
+     *  Creates and saves a new user based on the information
+     *  given in the parameter
+     * @param user Information to create the new user
+     * @return The user that was signed up
      */
-    public User SignUpp(String username, String password, String email){
-        User user = authService.signUpp(email, password, username);
-        return user;
+    @PostMapping("/signup")
+    public User SignUpp(@RequestBody User user){
+        return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername());
     }
 
 
-    /*
-     * Allows a existing user to logg inn to their account
-     * @param email : The email of the users account
-     * @param password : The password of the users account
+    /**
+     * Logs the user in to the service
+     * @param email email of the user
+     * @param password password of the user
+     * @param session The current session
+     * @return Confirmation that the user was successfully logged in
      */
-    public void logInn(String email, String password){
-        authService.logInn(email, password);
+    @PostMapping("/login")
+    public String logInn(@RequestParam String email, @RequestParam String password, HttpSession session){
+        User user = authService.logInn(email, password);
+        if (user == null){
+            return "User not found";
+        }
+        session.setAttribute("userId", user.getUserID());
+        return "User " +  session.getAttribute("userId") + " was successfully logged in";
     }
 
 
-    /*
-     * Allows a loged inn user to log out of the service
-     * @param user : The user who want's to log out
+    /**
+     * Logs a user out and ends the session
+     * @param session The current session
+     * @return Confirmation that the user was logged out
      */
-    public void logOut(User user){
+    @PostMapping("/logout")
+    public String logOut(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
         authService.logOut(user);
+        session.invalidate();
+        return "User was successfully logged out";
     }
 
 }
