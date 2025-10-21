@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,4 +36,24 @@ public class Post {
     private boolean isPostRead;
 
     private List<String> hashtags;
+
+    @ElementCollection
+    @CollectionTable(
+        name = "post_likes",
+        joinColumns = @JoinColumn(name = "post_id")
+    )
+    @Column(name = "user_id", nullable = false)
+    private List<Integer> likes = new ArrayList<>();
+
+    
+    public boolean addLike(Integer userId) {
+        if (likes == null) likes = new ArrayList<>();
+        if (likes.contains(userId)) return false; 
+        return likes.add(userId);
+    }
+
+    public boolean removeLike(Integer userId) {
+        if (likes == null) return false;
+        return likes.remove(userId);
+    }
 }

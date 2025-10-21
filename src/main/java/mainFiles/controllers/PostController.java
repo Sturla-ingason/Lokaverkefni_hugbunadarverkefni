@@ -1,37 +1,38 @@
 package mainFiles.controllers;
-
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.Data;
 import mainFiles.Service.PostService;
 import mainFiles.objects.Post;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import mainFiles.Service.PostService;
 
 @RestController
 public class PostController {
 
+
     private final PostService postService;
 
-    public PostController(PostService postService) {
-        this.postService = postService;
+    public PostController(PostService postService){
+      this.postService = postService;
     }
 
-   
-    @PostMapping(path = "/posts")
-    public ResponseEntity<Post> createPost(@RequestBody CreatePostRequest req) {
-        Post saved = postService.createNewPost(req.userId, req.description, req.hashTags);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+     public void createNewPost(){
+       //TODO
     }
 
-    // Request DTO kept at the boundary
-    public static class CreatePostRequest {
-        public Integer userId;
-        public String description;
-        public List<String> hashTags;
+
+    @PostMapping("/{postId}/like")
+    public void likePost(@PathVariable Integer postId, @RequestParam Integer userId) {
+        postService.likePost(postId, userId);
     }
-  }
+
+    @DeleteMapping("/{postId}/like")
+    public void unlikePost(@PathVariable Integer postId, @RequestParam Integer userId) {
+        postService.unlikePost(postId, userId);
+    }
+
+
+}

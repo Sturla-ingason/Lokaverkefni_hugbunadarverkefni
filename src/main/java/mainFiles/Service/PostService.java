@@ -1,41 +1,62 @@
 package mainFiles.Service;
 
-import java.time.Instant;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 import mainFiles.Data.PostData;
-import mainFiles.Data.UserData;
 import mainFiles.objects.Post;
-import mainFiles.objects.User;
 
 @Service
 public class PostService {
 
     private final PostData postData;
-    private final UserData userData;
 
-    public PostService(PostData postData, UserData userData) {
+    public PostService(PostData postData) {
         this.postData = postData;
-        this.userData = userData;
     }
 
+    /**
+     * Add a like to a post from the user
+     *
+     * @param postId 
+     * @param userId 
+     */
     @Transactional
-    public Post createNewPost(int userId, String description, List<String> hashTags) {
-        User user = userData.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+    public void likePost(Integer postId, Integer userId) {
+        
+        //fetch post
+        Post post = postData.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        Post p = new Post();
-        p.setUser(user);
-        p.setDescription(description);
+        //add user to posts list of likes
+        boolean added = post.addLike(userId);
+        if (!added) {
+            throw new IllegalStateException("User already liked this post");
+        }
 
-        // Use these if your entity has them:
-        try { p.getHashTags().addAll(hashTags); } catch (Exception ignored) {}
-        try { p.setPostRead(false); } catch (Exception ignored) {}
-        try { p.getClass().getMethod("setCreatedAt", Instant.class); p.setCreatedAt(Instant.now()); } catch (Exception ignored) {}
+        //save 
+        postData.save(post);
+    }
 
-        return postData.save(p);
+    /**
+     * Remove a like from a post from the user
+     *
+     * @param postId 
+     * @param userId 
+     */
+    @Transactional
+    public void unlikePost(Integer postId, Integer userId) {
+        
+        //fetch post
+        Post post = postData.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        
+        //remove user from posts list of likes
+        boolean removed = post.removeLike(userId);
+        if (!removed) {
+            throw new IllegalStateException("User has not liked this post");
+        }
+
+        //save
+        postData.save(post);
     }
 }
