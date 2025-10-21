@@ -34,7 +34,7 @@ public class CommentService {
      * @return the saved Comment
      */
     @Transactional
-    public Comment createComment(Integer postId, String userId, String text) {
+    public Comment createComment(Integer postId, Integer userId, String text) {
         // check text
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException("Comment text cannot be empty");
@@ -63,7 +63,7 @@ public class CommentService {
      * @param userId
      */
     @Transactional
-    public void deleteComment(Integer commentId, String userId) {
+    public void deleteComment(Integer commentId, Integer userId) {
         // fetch comment
         Comment comment = commentData.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));

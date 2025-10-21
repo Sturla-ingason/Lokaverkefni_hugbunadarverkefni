@@ -53,7 +53,7 @@ public interface UserData extends JpaRepository<User, String> {
      * @param userID : The user's ID
      * @return A user connected to that ID
      */
-    User findByUserID(String userID);
+    User findByUserID(Integer userID);
 
 
         //@Modifying

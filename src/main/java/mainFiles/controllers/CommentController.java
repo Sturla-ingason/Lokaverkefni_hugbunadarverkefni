@@ -18,14 +18,14 @@ public class CommentController {
 
     @PostMapping("/create")
     public Comment createComment(@RequestParam Integer postId,
-            @RequestParam String userId,
+            @RequestParam Integer userId,
             @RequestParam String text) {
         return commentService.createComment(postId, userId, text);
     }
 
     @DeleteMapping("/{commentId}")
     public void deleteComment(@PathVariable Integer commentId,
-                          @RequestParam String userId) {
+                          @RequestParam Integer userId) {
     commentService.deleteComment(commentId, userId);
 }
 
