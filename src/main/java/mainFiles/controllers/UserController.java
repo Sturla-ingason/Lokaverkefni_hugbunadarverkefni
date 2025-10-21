@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RestController;
 import mainFiles.Service.UserService;
 import mainFiles.Service.AuthService;
 import mainFiles.objects.User;
+
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import mainFiles.objects.User;
 
 
 @RestController
@@ -59,4 +64,10 @@ public class UserController {
     public void unfollow(User user, User user2){
         userService.unfollow(user, user2);
     }
+
+    @RequestMapping("/bio")
+    public void updateBio(@PathVariable String userId, @RequestBody String bio) {
+        userService.updateBio(userId, bio);
+    }
+
 }

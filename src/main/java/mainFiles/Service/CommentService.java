@@ -1,5 +1,7 @@
 package mainFiles.Service;
 
+import java.nio.file.AccessDeniedException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class CommentService {
      * @return the saved Comment
      */
     @Transactional
-    public Comment createComment(Integer postId, String userId, String text) {
+    public Comment createComment(Integer postId, Integer userId, String text) {
         // check text
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException("Comment text cannot be empty");
@@ -53,6 +55,33 @@ public class CommentService {
         return commentData.save(comment);
     }
 
+
+    /**
+     * Deletes comment only if it belongs to the user that wrote it
+     * 
+     * @param commentId
+     * @param userId
+     */
+    @Transactional
+    public void deleteComment(Integer commentId, Integer userId) {
+        // fetch comment
+        Comment comment = commentData.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+
+        // check comment creator
+        if (comment.getUser() == null || comment.getUser().getUserID() == null) {
+            throw new IllegalArgumentException("Cannot verify comment creator");
+        }
+
+        // check if user is comment creator
+        boolean isOwner = comment.getUser().getUserID().equals(userId);
+        if (!isOwner) {
+            throw new IllegalArgumentException("You can only delete your own comment");
+        }
+
+        // delete comment
+        commentData.delete(comment);
+    }
 
    
 
