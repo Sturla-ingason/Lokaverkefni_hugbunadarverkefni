@@ -1,16 +1,14 @@
 package mainFiles.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.Optional;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "Comments")
 public class Comment {
 
@@ -19,20 +17,16 @@ public class Comment {
     private int commentID;
 
     @Column(nullable = false, length = 1000)
+    @NonNull
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NonNull
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @NonNull
+    @JsonIgnore
     private Post post;
 
-    public Comment(User user, Post post, String comment) {
-        this.user = user;
-        this.post = post;
-        this.comment = comment;
-    }
-
-    public Comment(Optional<User> user, Post post, String text) {
-    }
 }

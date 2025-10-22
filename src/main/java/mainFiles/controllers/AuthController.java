@@ -26,8 +26,6 @@ public class AuthController {
     public User SignUpp(@RequestBody User user){
         return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername());
     }
-
-
     /**
      * Logs the user in to the service
      * @param email email of the user
@@ -44,17 +42,16 @@ public class AuthController {
         session.setAttribute("userId", user.getUserID());
         return "User " +  session.getAttribute("userId") + " was successfully logged in";
     }
-
-
     /**
      * Logs a user out and ends the session
      * @param session The current session
      * @return Confirmation that the user was logged out
      */
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public String logOut(HttpSession session){
-        User user = userService.findByID((int) session.getAttribute("userId"));
-        authService.logOut(user);
+        if (session.getAttribute("userId") == null) {
+            return "No active session found";
+        }
         session.invalidate();
         return "User was successfully logged out";
     }

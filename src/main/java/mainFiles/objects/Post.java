@@ -19,9 +19,6 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postID;
 
-    @Column(name = "user_userid", nullable = false)
-    private String userId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "user_userid",
@@ -34,6 +31,9 @@ public class Post {
 
     @NonNull
     private String description;
+
+    @Column(name = "user_userid", nullable = false)
+    private String userId;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comment;
@@ -55,13 +55,14 @@ public class Post {
     @Column(name = "user_id", nullable = false)
     private List<Integer> likes = new ArrayList<>();
 
-    
+    //Adds a like to a post
     public boolean addLike(Integer userId) {
         if (likes == null) likes = new ArrayList<>();
-        if (likes.contains(userId)) return false; 
+        if (likes.contains(userId)) return false;
         return likes.add(userId);
     }
 
+    //Removes a like from a post
     public boolean removeLike(Integer userId) {
         if (likes == null) return false;
         return likes.remove(userId);

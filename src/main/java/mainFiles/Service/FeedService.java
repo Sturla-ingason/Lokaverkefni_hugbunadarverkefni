@@ -23,17 +23,18 @@ public class FeedService {
     @Autowired
     private UserService userService;
 
-//    public FeedService(PostData postData, UserData userData, UserService userService) {
-//        this.postData = postData;
-//        this.userData = userData;
-//        this.userService = userService;
-//    }
-
+    /**
+     * Generates the feed for the current user
+     * @param user The Current user
+     * @return List of posts
+     */
     @Transactional
     public List<Post> generateFeed(User user){
         List<User> followedUsers = userService.getAllFollowedByUser(user);
+        if(followedUsers.isEmpty()){throw new IllegalStateException("You don't follow any users");}
         List<Post> posts =  new ArrayList<>();
         for (User u : followedUsers) {posts.addAll(postData.findAllByUserId(String.valueOf(u.getUserID())));}
+        if(posts.isEmpty()){throw new IllegalStateException("Your feed is empty");}
         return posts;
     }
 

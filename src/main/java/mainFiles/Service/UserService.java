@@ -3,33 +3,41 @@ package mainFiles.Service;
 import jakarta.transaction.Transactional;
 import mainFiles.Data.UserData;
 import mainFiles.objects.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserService{
-    private final UserData userData;
 
-    public UserService(UserData userData) {this.userData = userData;}
-
+    @Autowired
+    private UserData userData;
 
     /*
-     * Deleates user data from database
-     * @param user The user to be deleated from database
+     * Deletes a user data from database.
+     * Also deletes that user in any following
+     * and followers list of other users.
+     * @param user The user to be deleted from database
      */
+    @Transactional
     public void delete(User user){
         if(user == null){
             throw new IllegalArgumentException("The user can not be empty");
         }
+        //Delete the user in any following and followers list
+        user.getFollowers().forEach(f -> f.getFollowing().remove(user));
+        user.getFollowing().forEach(f -> f.getFollowers().remove(user));
+        //Delete the users following and followers list
+        user.getFollowers().clear();
+        user.getFollowing().clear();
 
         userData.delete(user);
     }
 
-
     /*
      * Updates user email in database
-     * @param user The user who want's to change their email
+     * @param user The user who wants to change their email
      * @param newEmail The new email the user wants to use for the account
      */
     @Transactional
@@ -37,96 +45,65 @@ public class UserService{
         if(user == null || newEmail == null){
             throw new IllegalArgumentException("Missing Input");
         }
-
+        if (user.getEmail().equals(newEmail)) {
+            throw new IllegalArgumentException("Cannot change email to current email");
+        }
+        if (userData.findByEmail(newEmail) != null) {
+            throw new IllegalArgumentException("Email already exists");
+        }
         user.setEmail(newEmail);
     }
 
-
     /*
-     * Updates username of user in database
-     * @param user
-     * @param newUsername
-     * @return 
+     * Updates username of a user in database
+     * @param user The user who wants to change their username
+     * @param newUsername The new username
      */
     @Transactional
-    public User updateUsername(User user, String NewUsername){
-        if(user == null && NewUsername == null){
+    public void updateUsername(User user, String NewUsername){
+        if(user == null || NewUsername == null){
             throw new IllegalArgumentException("Missing Input");
         }
-
+        if (userData.findByUsername(NewUsername) != null){
+            throw new IllegalArgumentException("Username already exists");
+        }
         user.setUsername(NewUsername);
-        return user;
     }
-
-
-    /*
-     * updates users password in database
-     * @param user
-     * @param newPassword
-     * @return
-     */
-    @Transactional
-    public User updatePassword(User user, String newPassword){
-        if(user == null && newPassword == null){
-            throw new IllegalArgumentException("Missing Input");
-        }
-
-        user.setPassword(newPassword);
-        return user;
-    }
-
 
     /*
      * Lets the user reset his/hers password in the database
-     * @param email
-     * @param newPassword
-     * @return
+     * @param user the user who wants to change their password
+     * @param password The current password of the user
+     * @param newPassword The new password of the user
      */
     @Transactional
-    public User resetpassword(String email, String newPassword){
-        if(email == null && newPassword == null){
-            throw new IllegalArgumentException("missing input");
+    public void resetPassword(User user, String password, String newPassword){
+        if(!user.getPassword().equals(password)){
+            throw new IllegalArgumentException("Password doesn't match user");
         }
-
-        User user = userData.findByEmail(email);
+        if (password.equals(newPassword)) {
+            throw new IllegalArgumentException("New password cannot be the old password");
+        }
         user.setPassword(newPassword);
-        return user;
     }
-
 
     /*
      * Allows a user to update their bio on the service
-     * @param user The user who want's to update their bio
+     * @param user The user who wants to update their bio
      * @param bio New and updated bio from the user
      */
     @Transactional
-    public void updateBio(String userId, String bio) {
-        User user = userData.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("There is no user"));
-
+    public void updateBio(User user, String bio) {
         if (bio == null) {
             throw new IllegalArgumentException("Bio cannot be null");
         }
-
         user.setBio(bio);
     }
 
-
-    /*
-     * Allows the user to update their profile picture
-     */
-    public void updateProfilePicture(User user){
-        
-    }
-
-
-    //Follower
-    //------------------------------------------------------------------------------------------
-
     /*
      * Lets one user follow another user
-     * @param user
-     * @param userToFollow
+     * @param user The user who want to follow another user
+     * @param userToFollow The user to be followed
      */
     @Transactional
     public void follow(User user, int IdToFollow){
@@ -140,20 +117,17 @@ public class UserService{
         if (user.equals(userToFollow)) {
             throw new IllegalArgumentException("A user cannot follow themselves.");
         }
-
         user.follow(userToFollow); //Follows the user to follow
         userToFollow.getFollowers().add(user); //Add user to the follower list of user to follow
-
         //Updates both users
         userData.save(userToFollow);
         userData.save(user);
     }
 
-
     /*
      * Lets one user unfollow another user
-     * @param user
-     * @param userToUnfollow
+     * @param user The user who wants to unfollow
+     * @param userToUnfollow The user to unfollow
      */
     @Transactional
     public void unfollow(User user, int IdToUnfollow){
@@ -171,9 +145,7 @@ public class UserService{
 
         userData.save(userToUnfollow);
         userData.save(user);
-
     }
-
 
     /*
      * gets the follower amount of a user
@@ -195,6 +167,11 @@ public class UserService{
         return user.getFollowingCount();
     }
 
+    /**
+     * Removes a follower of a user
+     * @param user The user who wants to remove a follower
+     * @param IdToRemove The id of the user to be removed
+     */
     @Transactional
     public void removeFollower(User user, int IdToRemove){
         User userToRemove;
@@ -208,25 +185,31 @@ public class UserService{
     }
 
     /*
-     * Gets all the followers of a user
+     * Gets all the followers of a users
      * @param user The user we want to get the followers of.
-     * @return
+     * @return List of users that follow the user
      */
+    @Transactional
     public List<User> getAllFollowersOfUser(User user){
         return user.getFollowers();
     }
 
-
     /*
      * Gets all the people a user is following
      * @param user The user that we want to see who he is following.
-     * @return
+     * @return List of users that the user follows
      */
+    @Transactional
     public List<User> getAllFollowedByUser(User user){
         return user.getFollowing();
     }
 
-
+    /**
+     * Finds a user by their id
+     * @param userId The id of the user
+     * @return The user connected to the id
+     */
+    @Transactional
     public User findByID(int userId) {
         return userData.findById(userId);
     }
