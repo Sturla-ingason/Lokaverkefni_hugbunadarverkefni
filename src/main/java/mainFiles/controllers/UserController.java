@@ -1,61 +1,123 @@
 package mainFiles.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.servlet.http.HttpSession;
+import mainFiles.Service.AuthService;
 import mainFiles.Service.UserService;
 import mainFiles.objects.User;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import mainFiles.objects.User;
+import java.util.List;
 
 
 @RestController
 @RequestMapping(path="/user")
 public class UserController {
+
+    @Autowired
     private UserService userService;
+    @Autowired
+    private AuthService authService;
 
-    public String requestMethodName(@RequestParam String param) {
-        return new String();
-    }
-    
-    public void createNewUser(User user){
-        userService.save(user);
-    }
-
-
-    public void deleateUser(User user){
-        userService.deleate(user);
-    }
-
-
-    public void updateUsername(User user, String newUsername){
-        userService.updateUsername(user, newUsername);
+    @DeleteMapping("/delete")
+    public String deleteUser(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        String username = user.getUsername();
+        userService.delete(user);
+        return "User " + username + " has been deleted";
     }
 
+    @PutMapping("/username")
+    public void updateUsername(HttpSession session,@RequestParam String username){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.updateUsername(user, username);
+    }
 
-    public void updateEmail(User user, String newEmail){
-        userService.updateEmail(user, newEmail);
+    @PutMapping("/email")
+    public void updateEmail(HttpSession session, @RequestParam String email){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.updateEmail(user, email);
+    }
+
+    @PutMapping("/bio")
+    public void updateBio(HttpSession session, @RequestParam String bio) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.updateBio(user, bio);
+    }
+
+    @PutMapping("/password")
+    public void resetPassword(HttpSession session,@RequestParam String password, @RequestParam String newPassword){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.resetPassword(user, password, newPassword);
+    }
+
+    @PatchMapping("/follow")
+    public void follow(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.follow(user, userID);
+    }
+
+    @PatchMapping("/unfollow")
+    public void unfollow(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.unfollow(user, userID);
+    }
+
+    @GetMapping("/allfollowers")
+    public List<User> getAllFollowers(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return user.getFollowers();
+    }
+    @GetMapping("/allfollowing")
+    public List<User> getAllFollowing(HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return user.getFollowing();
+    }
+
+    @PatchMapping("/removefollower")
+    public void removeFollower(HttpSession session,@RequestParam int userID){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        userService.removeFollower(user, userID);
+    }
+
+    @GetMapping("/getuser")
+    public User getUser(HttpSession session){
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return userService.findByID((int) session.getAttribute("userId"));
     }
 
 
-    public void resetPassword(String userEmail, String newPassword){
-        userService.resetpassword(userEmail, newPassword);
-    }
 
-    public void updatePassword(User user, String newPassword){
-        userService.updatePassword(user, newPassword);
-    }
-
-
-    public void follow(User user, User user2){
-        userService.follow(user, user2);
-    }
-
-
-    public void unfollow(User user, User user2){
-        userService.unfollow(user, user2);
-    }
 }
