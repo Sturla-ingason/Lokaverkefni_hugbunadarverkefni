@@ -47,24 +47,18 @@ public class Post {
 
     private List<String> hashtags;
 
-    @ElementCollection
-    @CollectionTable(
-        name = "post_likes",
-        joinColumns = @JoinColumn(name = "post_id")
-    )
-    @Column(name = "user_id", nullable = false)
-    private List<Integer> likes = new ArrayList<>();
+    private List<Integer> likesOnPost = new ArrayList<>();
 
     //Adds a like to a post
     public boolean addLike(Integer userId) {
-        if (likes == null) likes = new ArrayList<>();
-        if (likes.contains(userId)) return false;
-        return likes.add(userId);
+        if (likesOnPost == null) likesOnPost = new ArrayList<>();
+        if (likesOnPost.contains(userId)) return false;
+        return likesOnPost.add(userId);
     }
 
     //Removes a like from a post
     public boolean removeLike(Integer userId) {
-        if (likes == null) return false;
-        return likes.remove(userId);
+        if (likesOnPost == null) return false;
+        return likesOnPost.remove(userId);
     }
 }

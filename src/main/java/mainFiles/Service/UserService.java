@@ -1,6 +1,8 @@
 package mainFiles.Service;
 
 import jakarta.transaction.Transactional;
+import mainFiles.Data.CommentData;
+import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,10 @@ public class UserService{
 
     @Autowired
     private UserData userData;
+    @Autowired
+    private PostData postData;
+    @Autowired
+    private CommentData commentData;
 
     /*
      * Deletes a user data from database.
@@ -31,6 +37,16 @@ public class UserService{
         //Delete the users following and followers list
         user.getFollowers().clear();
         user.getFollowing().clear();
+
+        //Delete all the likes from the user
+        postData.findAll().forEach(postData -> {postData.removeLike(user.getUserID());});
+
+        //Delete all the comments from user
+        commentData.findAll().forEach(comment -> {
+            if (comment.getUser() == user) {
+                commentData.delete(comment);
+            }
+        });
 
         userData.delete(user);
     }

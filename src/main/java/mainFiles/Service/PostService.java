@@ -39,9 +39,12 @@ public class PostService {
         //fetch post
         Post post = postData.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
-        if (post.getLikes().contains(userId)) {
-            throw new IllegalArgumentException("User already liked post");
+        if (post.getLikesOnPost() != null){
+            if (post.getLikesOnPost().contains(userId)) {
+                throw new IllegalArgumentException("User already liked post");
+            }
         }
+
         post.addLike(userId);
         postData.save(post);
     }
