@@ -9,11 +9,28 @@ import java.util.List;
 @Repository
 public interface PostData extends JpaRepository<Post, Integer> {
 
-    /**
+    /*
      * Finds all post that a user has created
      * @param userId The id that is connected to the user
      * @return A list of posts from the user connected to the id
      */
     public List<Post> findAllByUserId(String userId);
+
+
+    /*
+     * finds all posts by hastag
+     * @Param hastag : the hastag to search marked posts by
+     * return a list of all posts maked by the hastag
+     */
+
+
+     /*
+      * find all post by date
+      * @Param timeFrom : 
+      * @Param timeToo : 
+      * @Param userToSearchBy : 
+      * return a list of all post's between timeFrom and timeToo.
+      */
+
 }
 
