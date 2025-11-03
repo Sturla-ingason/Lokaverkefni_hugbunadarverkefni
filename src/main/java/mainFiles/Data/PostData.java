@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Date;
+import mainFiles.objects.User;
 
 @Repository
 public interface PostData extends JpaRepository<Post, Integer> {
@@ -22,7 +24,7 @@ public interface PostData extends JpaRepository<Post, Integer> {
      * @Param hastag : the hastag to search marked posts by
      * return a list of all posts maked by the hastag
      */
-
+    public List<Post> findAllByHashtags(String hastag);
 
      /*
       * find all post by date
@@ -31,6 +33,7 @@ public interface PostData extends JpaRepository<Post, Integer> {
       * @Param userToSearchBy : 
       * return a list of all post's between timeFrom and timeToo.
       */
+      public List<Post> findByUserAnddateOfUploadBetween(User user, Date timeFrom, Date timeToo);
 
 }
 

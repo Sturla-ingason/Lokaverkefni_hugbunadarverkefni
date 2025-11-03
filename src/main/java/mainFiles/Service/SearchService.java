@@ -1,18 +1,29 @@
 package mainFiles.Service;
-import mainFiles.objects.User;
+import mainFiles.objects.*;
+
+import java.util.Date;
+import java.util.List;
+
+import mainFiles.Data.*;
 
 public class SearchService {
+
+    private UserData userdata;
+    private PostData postData;
 
     /*
      * Allows a user to search for another user.
      * @Param username : The name of the user to search for.
      * return all user's with that name or with that name as a substring.
      */
-    public User userSearch(){
+    public List<User> userSearch(String username){
+        if(username == null){
+            throw new IllegalArgumentException("Now username to search by");
+        }
+        
+        List<User> listOfUsers = userdata.findByUsernameEqualsOrUsernameContaining(username);
 
-        User user = new User();
-
-        return user;
+        return listOfUsers;
     }
 
 
@@ -21,7 +32,14 @@ public class SearchService {
      * @Param hashtag : The marked tag for post's the user want's to find
      * return all post's maked with the hastag.
      */
-    public void hashTagSearch(){
+    public List<Post> hashTagSearch(String hastag){
+        if(hastag == null){
+            throw new IllegalArgumentException("No hastag inputed");
+        }
+
+        List<Post> listOfPosts = postData.findAllByHashtags(hastag);
+
+        return listOfPosts;
 
     }
 
@@ -33,7 +51,14 @@ public class SearchService {
      * @Param user : in what user's post we are searching inn.
      * return a list of all the post's in the given timeframe.
      */
-    public void dateSearch(){
+    public List<Post> dateSearch(Date timeFrom, Date timeToo, User user){
+        if(timeFrom == null || timeToo == null || user == null){
+            throw new IllegalArgumentException("Missing info");
+        }
+
+        List<Post> listOfPostsBetweenDates = postData.findByUserAnddateOfUploadBetween(user, timeFrom, timeToo);
+
+        return listOfPostsBetweenDates;
 
     }
     
