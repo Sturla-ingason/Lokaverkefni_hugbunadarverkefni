@@ -22,7 +22,8 @@ public class PostController {
 
     /**
      * Likes a post
-     * @param postId The post to be liked
+     * 
+     * @param postId  The post to be liked
      * @param session The current session
      */
     @PostMapping("/like")
@@ -36,7 +37,8 @@ public class PostController {
 
     /**
      * unlikes a post
-     * @param postId The post to unlike
+     * 
+     * @param postId  The post to unlike
      * @param session The current session
      */
     @PatchMapping("/unlike")
@@ -44,13 +46,14 @@ public class PostController {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        int userId = (int)session.getAttribute("userId");
+        int userId = (int) session.getAttribute("userId");
         postService.unlikePost(postId, userId);
     }
 
     /**
      * Creates a new post
-     * @param post What the post should contain
+     * 
+     * @param post    What the post should contain
      * @param session The current session
      * @return The created post
      */
@@ -65,8 +68,9 @@ public class PostController {
 
     /**
      * Creates a new comment
-     * @param postId The id of the post to be commented on
-     * @param text The text of the comment
+     * 
+     * @param postId  The id of the post to be commented on
+     * @param text    The text of the comment
      * @param session the current session
      */
     @PostMapping("/comment/create")
@@ -80,7 +84,8 @@ public class PostController {
 
     /**
      * Delets a comment
-     * @param session The current session
+     * 
+     * @param session   The current session
      * @param commentId The id of the comment to be deleted
      */
     @DeleteMapping("/comment/delete")
@@ -91,4 +96,25 @@ public class PostController {
         }
         commentService.deleteComment(commentId, user);
     }
+
+    /**
+     * Edits a post's description
+     * 
+     * @param session     The current session
+     * @param postId      The id of the post to edit
+     * @param description The new description of the post
+     * @return The updated post
+     */
+    @PutMapping("/edit")
+    public Post editPost(HttpSession session,
+            @RequestParam int postId,
+            @RequestParam String description) {
+        Object sid = session.getAttribute("userId");
+        if (sid == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) sid);
+        return postService.editPostDescription(postId, user, description);
+    }
+
 }
