@@ -20,12 +20,7 @@ public class Post {
     private int postID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "user_userid",
-            referencedColumnName = "userID",
-            insertable = false,
-            updatable = false
-    )
+    @JoinColumn(name = "user_userid", referencedColumnName = "userID", insertable = false, updatable = false)
     @NonNull
     private User user;
 
@@ -49,16 +44,44 @@ public class Post {
 
     private List<Integer> likesOnPost = new ArrayList<>();
 
-    //Adds a like to a post
+    // Adds a like to a post
     public boolean addLike(Integer userId) {
-        if (likesOnPost == null) likesOnPost = new ArrayList<>();
-        if (likesOnPost.contains(userId)) return false;
+        if (likesOnPost == null)
+            likesOnPost = new ArrayList<>();
+        if (likesOnPost.contains(userId))
+            return false;
         return likesOnPost.add(userId);
     }
 
-    //Removes a like from a post
+    // Removes a like from a post
     public boolean removeLike(Integer userId) {
-        if (likesOnPost == null) return false;
+        if (likesOnPost == null)
+            return false;
         return likesOnPost.remove(userId);
     }
+
+    // Timestamp for last edit of a post description
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at", nullable = true)
+    private Date updatedAt;
+
+    //Manages timestamps
+    @PrePersist
+    protected void onCreate() {
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
 }
