@@ -24,7 +24,7 @@ public interface PostData extends JpaRepository<Post, Integer> {
      * @Param hastag : the hastag to search marked posts by
      * return a list of all posts maked by the hastag
      */
-    public List<Post> findAllByHashtags(String hastag);
+    public List<Post> findByHashtagsContaining(String hastag);
 
      /*
       * find all post by date
@@ -33,7 +33,8 @@ public interface PostData extends JpaRepository<Post, Integer> {
       * @Param userToSearchBy : 
       * return a list of all post's between timeFrom and timeToo.
       */
-      public List<Post> findByUserAnddateOfUploadBetween(User user, Date timeFrom, Date timeToo);
+      public List<Post> findByUserAndDateOfUploadBetween(User user, Date timeFrom, Date timeTo);
+
 
 }
 

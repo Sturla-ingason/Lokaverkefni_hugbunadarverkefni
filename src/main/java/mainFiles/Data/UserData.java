@@ -58,6 +58,6 @@ public interface UserData extends JpaRepository<User, Integer> {
      * @Param username : the username to search by
      * return a list of all users with the username or with the username as a substring
      */
-    List<User> findByUsernameEqualsOrUsernameContaining(String username);
+    List<User> findByUsernameContaining(String username);
 
 }
