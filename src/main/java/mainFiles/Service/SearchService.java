@@ -21,9 +21,8 @@ public class SearchService {
             throw new IllegalArgumentException("Now username to search by");
         }
         
-        List<User> listOfUsers = userdata.findByUsernameEqualsOrUsernameContaining(username);
-
-        return listOfUsers;
+        return userdata.findByUsernameEqualsOrUsernameContaining(username);
+        
     }
 
 
@@ -36,10 +35,8 @@ public class SearchService {
         if(hastag == null){
             throw new IllegalArgumentException("No hastag inputed");
         }
-
-        List<Post> listOfPosts = postData.findAllByHashtags(hastag);
-
-        return listOfPosts;
+        
+        return postData.findAllByHashtags(hastag);
 
     }
 
@@ -56,9 +53,7 @@ public class SearchService {
             throw new IllegalArgumentException("Missing info");
         }
 
-        List<Post> listOfPostsBetweenDates = postData.findByUserAnddateOfUploadBetween(user, timeFrom, timeToo);
-
-        return listOfPostsBetweenDates;
+        return postData.findByUserAnddateOfUploadBetween(user, timeFrom, timeToo);
 
     }
     
