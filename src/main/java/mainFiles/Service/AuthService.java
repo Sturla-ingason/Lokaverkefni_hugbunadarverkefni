@@ -23,12 +23,14 @@ public class AuthService {
         if(email == null || password == null || userName == null){
             throw new IllegalArgumentException("Missing input");
         }
+
         if (userData.findByEmail(email) != null) {
             throw new IllegalArgumentException("Email already exists");
         }
         if (userData.findByUsername(userName) != null) {
             throw new IllegalArgumentException("Username already exists");
         }
+
         User user = new User(userName, email, password);
         userData.save(user);
         return user;
@@ -45,6 +47,7 @@ public class AuthService {
         if(email == null || password == null){
             throw new IllegalArgumentException("Missing Input");
         }
+        
         if(userData.findByEmail(email) == null){
             throw new IllegalArgumentException("Email not registered");
         }

@@ -20,11 +20,11 @@ public class CommentService {
     @Autowired
     private UserData userData;
 
-    /**
+    /*
      * Create a single comment on a post.
-     * @param postId  the post to comment on
-     * @param user  the author of the comment
-     * @param text    the comment text
+     * @param postId : the post to comment on
+     * @param user : the author of the comment
+     * @param text : the comment text
      */
     @Transactional
     public void createComment(Integer postId, User user, String text) {
@@ -42,10 +42,10 @@ public class CommentService {
     }
 
 
-    /**
+    /*
      * Deletes comment only if it belongs to the user that wrote it
-     * @param commentId The id of the comment to be deleted
-     * @param user The user that created the comment
+     * @param : commentId The id of the comment to be deleted
+     * @param : user The user that created the comment
      */
     @Transactional
     public void deleteComment(int commentId, User user) {

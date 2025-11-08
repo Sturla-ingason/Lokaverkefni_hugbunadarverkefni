@@ -25,8 +25,7 @@ public class UserService {
      * Deletes a user data from database.
      * Also deletes that user in any following
      * and followers list of other users.
-     * 
-     * @param user The user to be deleted from database
+     * @param user : The user to be deleted from database
      */
     @Transactional
     public void delete(User user) {
@@ -58,10 +57,8 @@ public class UserService {
 
     /*
      * Updates user email in database
-     * 
-     * @param user The user who wants to change their email
-     * 
-     * @param newEmail The new email the user wants to use for the account
+     * @param user : The user who wants to change their email
+     * @param newEmail : The new email the user wants to use for the account
      */
     @Transactional
     public void updateEmail(User user, String newEmail) {
@@ -80,10 +77,8 @@ public class UserService {
 
     /*
      * Updates username of a user in database
-     * 
-     * @param user The user who wants to change their username
-     * 
-     * @param newUsername The new username
+     * @param user : The user who wants to change their username
+     * @param newUsername : The new username
      */
     @Transactional
     public void updateUsername(User user, String NewUsername) {
@@ -99,12 +94,9 @@ public class UserService {
 
     /*
      * Lets the user reset his/hers password in the database
-     * 
-     * @param user the user who wants to change their password
-     * 
-     * @param password The current password of the user
-     * 
-     * @param newPassword The new password of the user
+     * @param : user the user who wants to change their password
+     * @param : password The current password of the user
+     * @param : newPassword The new password of the user
      */
     @Transactional
     public void resetPassword(User user, String password, String newPassword) {
@@ -120,10 +112,8 @@ public class UserService {
 
     /*
      * Allows a user to update their bio on the service
-     * 
-     * @param user The user who wants to update their bio
-     * 
-     * @param bio New and updated bio from the user
+     * @param user : The user who wants to update their bio
+     * @param bio : New and updated bio from the user
      */
     @Transactional
     public void updateBio(User user, String bio) {
@@ -136,10 +126,8 @@ public class UserService {
 
     /*
      * Lets one user follow another user
-     * 
-     * @param user The user who want to follow another user
-     * 
-     * @param userToFollow The user to be followed
+     * @param user : The user who want to follow another user
+     * @param userToFollow : The user to be followed
      */
     @Transactional
     public void follow(User user, int IdToFollow) {
@@ -163,10 +151,8 @@ public class UserService {
 
     /*
      * Lets one user unfollow another user
-     * 
-     * @param user The user who wants to unfollow
-     * 
-     * @param userToUnfollow The user to unfollow
+     * @param user : The user who wants to unfollow
+     * @param userToUnfollow : The user to unfollow
      */
     @Transactional
     public void unfollow(User user, int IdToUnfollow) {
@@ -189,9 +175,7 @@ public class UserService {
 
     /*
      * gets the follower amount of a user
-     * 
-     * @param user The user we want to get the amount of followers of.
-     * 
+     * @param user : The user we want to get the amount of followers of.
      * @return The amount of followers a user has
      */
     @Transactional
@@ -202,9 +186,7 @@ public class UserService {
 
     /*
      * gets the amount of users the user is following
-     * 
-     * @param user The user we want to get the amount of following for.
-     * 
+     * @param user : The user we want to get the amount of following for.
      * @return The amount a user follows
      */
     @Transactional
@@ -215,9 +197,8 @@ public class UserService {
 
     /*
      * Removes a follower of a user
-     * 
-     * @param user       The user who wants to remove a follower
-     * @param IdToRemove The id of the user to be removed
+     * @param user : The user who wants to remove a follower
+     * @param IdToRemove : The id of the user to be removed
      */
     @Transactional
     public void removeFollower(User user, int IdToRemove) {
@@ -234,9 +215,7 @@ public class UserService {
 
     /*
      * Gets all the followers of a users
-     * 
-     * @param user The user we want to get the followers of.
-     * 
+     * @param user : The user we want to get the followers of.
      * @return List of users that follow the user
      */
     @Transactional
@@ -246,10 +225,8 @@ public class UserService {
 
 
     /*
-     * Gets all the people a user is following
-     * 
-     * @param user The user that we want to see who he is following.
-     * 
+     * Gets all the people a user is following 
+     * @param user : The user that we want to see who he is following.
      * @return List of users that the user follows
      */
     @Transactional
@@ -260,8 +237,7 @@ public class UserService {
 
     /*
      * Finds a user by their id
-     * 
-     * @param userId The id of the user
+     * @param userId : The id of the user
      * @return The user connected to the id
      */
     @Transactional
@@ -269,10 +245,9 @@ public class UserService {
         return userData.findById(userId);
     }
 
-    /**
+    /*
      * Finds a user by their username
-     * 
-     * @param username The username to search for
+     * @param username : The username to search for
      * @return The user connected to the username
      */
     @Transactional

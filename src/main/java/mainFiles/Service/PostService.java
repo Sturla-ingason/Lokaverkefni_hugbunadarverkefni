@@ -13,11 +13,10 @@ public class PostService {
     @Autowired
     private PostData postData;
 
-    /**
+    /*
      * Creates a new post
-     * 
-     * @param user        The user who want to create a post
-     * @param description The text of the post
+     * @param user : The user who want to create a post
+     * @param description : The text of the post
      * @return The created post
      */
     @Transactional
@@ -30,11 +29,10 @@ public class PostService {
         return postData.save(p);
     }
 
-    /**
+    /*
      * Add a like to a post from a user
-     * 
-     * @param postId The id of the post to like
-     * @param userId The user who wants to like a post
+     * @param postId : The id of the post to like
+     * @param userId : The user who wants to like a post
      */
     @Transactional
     public void likePost(int postId, Integer userId) {
@@ -51,11 +49,10 @@ public class PostService {
         postData.save(post);
     }
 
-    /**
+    /*
      * Remove a like from a post from the user
-     * 
-     * @param postId The id of the post to unlike
-     * @param userId The user who wants to unlike a post
+     * @param : postId The id of the post to unlike
+     * @param : userId The user who wants to unlike a post
      */
     @Transactional
     public void unlikePost(int postId, Integer userId) {
@@ -71,13 +68,12 @@ public class PostService {
         postData.save(post);
     }
 
-    /**
+    /*
      * Edits the description of a post.
      * Only the author of the post is allowed to edit it.
-     * 
-     * @param postId         The id of the post to edit
-     * @param user           The user attempting the edit
-     * @param newDescription The new description of the post
+     * @param postId : The id of the post to edit
+     * @param user : The user attempting the edit
+     * @param newDescription : The new description of the post
      * @return The updated post
      */
     @Transactional
