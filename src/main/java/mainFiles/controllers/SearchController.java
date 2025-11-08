@@ -20,6 +20,7 @@ public class SearchController {
      */
     @GetMapping("/usersearch")
     public List<User> userSearch(@RequestParam String username){
+        
         if(username != null){
             return searchService.userSearch(username);
         }
@@ -48,9 +49,10 @@ public class SearchController {
 
     /*
      * search for posts in a certain timeframe
-     * @Param timeFrom : 
-     * @Param timeToo : 
-     * @Param user : 
+     * @Param timeFrom : Time to search from
+     * @Param timeToo : Time to search too
+     * @Param user : The user we want to search the posts by date
+     * return a list of posts with inn the two diffrent dates.
      */
     @GetMapping("/datesearch")
     public List<Post> dateSearch(@RequestParam Date timeFrom, @RequestParam Date timeToo, @RequestParam User user){

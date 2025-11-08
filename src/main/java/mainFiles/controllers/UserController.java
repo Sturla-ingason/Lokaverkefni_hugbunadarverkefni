@@ -39,8 +39,8 @@ public class UserController {
 
     /*
      * Updates the active users username
-     * @Param session :
-     * @Param username : 
+     * @Param session : Session of the user that want's to update their username
+     * @Param username : The new username of the user
      */
     @PutMapping("/username")
     public void updateUsername(HttpSession session,@RequestParam String username){
@@ -54,8 +54,8 @@ public class UserController {
 
     /*
      * updates current users email
-     * @Param session : 
-     * @Param email : 
+     * @Param session : session of the user that want's to update their email
+     * @Param email : new email to assigne to the user
      */
     @PutMapping("/email")
     public void updateEmail(HttpSession session, @RequestParam String email){
@@ -69,8 +69,8 @@ public class UserController {
 
     /*
      * updates the current users bio
-     * @Param session :
-     * @Param bio : 
+     * @Param session : session of the user that want's to update their user
+     * @Param bio : The new bio of the user
      */
     @PutMapping("/bio")
     public void updateBio(HttpSession session, @RequestParam String bio) {
@@ -84,7 +84,7 @@ public class UserController {
 
     /*
      * updates the current users password to their account
-     * @Param session : 
+     * @Param session : session of the user that want's to reset their password
      * @Param password : The current password to the users account
      * @Param newPassword : The new password that user want's to set for the account
      */
@@ -100,7 +100,7 @@ public class UserController {
 
     /*
      * Allows a user to follow another user
-     * @Param session : 
+     * @Param session : session of the user that want's to follow another user
      * @Param userID : The ID of the user the current user want's to follow
      */
     @PatchMapping("/follow")
@@ -115,7 +115,7 @@ public class UserController {
 
     /*
      * Allows a user to unfollow another user
-     * @Param session : 
+     * @Param session : session of the user that want's to unfollow another user
      * @Param userID : The Id of the user the current user want's to unfollow
      */
     @PatchMapping("/unfollow")
@@ -130,7 +130,7 @@ public class UserController {
 
     /*
      * Get all the followers of the current logged in user
-     * @Param session : 
+     * @Param session : session of the user that we want to get the followers for
      * return a list of all the user's the logged inn user is following
      */
     @GetMapping("/allfollowers")
@@ -145,7 +145,7 @@ public class UserController {
     
     /*
      * Get all the user's the logged in user is following
-     * @Param session : 
+     * @Param session : session of the user that we want to get all the user's that are following them
      * return a list of all the users the logged in user is following
      */
     @GetMapping("/allfollowing")
@@ -160,7 +160,7 @@ public class UserController {
 
     /*
      * Allows the logged inn user to remove a follower from their account
-     * @Param session : 
+     * @Param session : session of the user that want's to remove a follower
      */
     @PatchMapping("/removefollower")
     public void removeFollower(HttpSession session,@RequestParam int userID){
@@ -174,7 +174,8 @@ public class UserController {
 
     /*
      * Get's the logged inn user
-     * @Param session : 
+     * @Param session : session of the user that is currently logged inn
+     * returns a user element of the currently logged inn user
      */
     @GetMapping("/getuser")
     public User getUser(HttpSession session){
