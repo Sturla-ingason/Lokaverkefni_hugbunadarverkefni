@@ -20,6 +20,7 @@ public class UserService {
     @Autowired
     private CommentData commentData;
 
+    
     /*
      * Deletes a user data from database.
      * Also deletes that user in any following
@@ -54,6 +55,7 @@ public class UserService {
         userData.delete(user);
     }
 
+
     /*
      * Updates user email in database
      * 
@@ -75,6 +77,7 @@ public class UserService {
         user.setEmail(newEmail);
     }
 
+
     /*
      * Updates username of a user in database
      * 
@@ -92,6 +95,7 @@ public class UserService {
         }
         user.setUsername(NewUsername);
     }
+
 
     /*
      * Lets the user reset his/hers password in the database
@@ -113,6 +117,7 @@ public class UserService {
         user.setPassword(newPassword);
     }
 
+
     /*
      * Allows a user to update their bio on the service
      * 
@@ -127,6 +132,7 @@ public class UserService {
         }
         user.setBio(bio);
     }
+
 
     /*
      * Lets one user follow another user
@@ -154,6 +160,7 @@ public class UserService {
         userData.save(user);
     }
 
+
     /*
      * Lets one user unfollow another user
      * 
@@ -179,6 +186,7 @@ public class UserService {
         userData.save(user);
     }
 
+
     /*
      * gets the follower amount of a user
      * 
@@ -190,6 +198,7 @@ public class UserService {
     public int getFollowerAmount(User user) {
         return user.getFollowerCount();
     }
+
 
     /*
      * gets the amount of users the user is following
@@ -203,7 +212,8 @@ public class UserService {
         return user.getFollowingCount();
     }
 
-    /**
+
+    /*
      * Removes a follower of a user
      * 
      * @param user       The user who wants to remove a follower
@@ -221,6 +231,7 @@ public class UserService {
         userToRemove.unfollow(user);
     }
 
+
     /*
      * Gets all the followers of a users
      * 
@@ -232,6 +243,7 @@ public class UserService {
     public List<User> getAllFollowersOfUser(User user) {
         return user.getFollowers();
     }
+
 
     /*
      * Gets all the people a user is following
@@ -245,7 +257,8 @@ public class UserService {
         return user.getFollowing();
     }
 
-    /**
+
+    /*
      * Finds a user by their id
      * 
      * @param userId The id of the user
