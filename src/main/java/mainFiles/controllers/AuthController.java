@@ -16,7 +16,7 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    /**
+    /*
      *  Creates and saves a new user based on the information
      *  given in the parameter
      * @param user Information to create the new user
@@ -26,7 +26,9 @@ public class AuthController {
     public User SignUpp(@RequestBody User user){
         return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername());
     }
-    /**
+
+
+    /*
      * Logs the user in to the service
      * @param email email of the user
      * @param password password of the user
@@ -42,7 +44,9 @@ public class AuthController {
         session.setAttribute("userId", user.getUserID());
         return "User " +  session.getAttribute("userId") + " was successfully logged in";
     }
-    /**
+
+
+    /*
      * Logs a user out and ends the session
      * @param session The current session
      * @return Confirmation that the user was logged out
