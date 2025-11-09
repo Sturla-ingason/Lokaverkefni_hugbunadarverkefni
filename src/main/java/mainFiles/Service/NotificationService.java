@@ -29,7 +29,13 @@ public class NotificationService {
     private CommentData commentData;
 
     
-
+    /**
+     * Retrieves notifications for user.
+     *
+     * @param userId the ID of the user whose notifications should be retrieved
+     * @return a list of notifications belonging to that user
+     * @throws IllegalArgumentException if the user does not exist
+     */
     public List<Notification> getForUser(int userId) {
         User recipient = userData.findById(userId); 
         if (recipient == null) 
@@ -37,6 +43,15 @@ public class NotificationService {
         return notificationData.findByRecipientOrderByCreatedAtDesc(recipient);
     }
 
+
+
+    /**
+     * Counts how many notifications a user has that are still unread.
+     *
+     * @param userId the ID of the user
+     * @return the number of unread notifications
+     * @throws IllegalArgumentException if the user does not exist
+     */
     public long unreadCount(int userId) {
         User recipient = userData.findById(userId);
         if (recipient == null) 
@@ -45,6 +60,15 @@ public class NotificationService {
     }
 
    
+    /**
+     * Marks a specific notification as read only if the user
+     * requesting the change is the recipient of the notification.
+     *
+     * @param notificationId the ID of the notification to mark as read
+     * @param userId the ID of the user attempting the action
+     * @throws IllegalArgumentException if the notification is not found
+     * or if the user is not the owner of the notification                                 
+     */
 
     @Transactional
     public void markRead(int notificationId, int userId) {
@@ -58,6 +82,15 @@ public class NotificationService {
         notificationData.save(n);
     }
  
+
+    /**
+     * Creates and saves a notification when someone comments on a users post
+     *
+     * @param recipientUserId the ID of the user who should receive the notification
+     * @param commentId the ID of the comment 
+     * @return the created Notification 
+     * @throws IllegalArgumentException if the user or the comment does not exist
+     */
 
     @Transactional
     public Notification notifyComment(int recipientUserId, int commentId) {
@@ -82,6 +115,16 @@ public class NotificationService {
         return notificationData.save(n);
     }
 
+
+    /**
+     * Creates and saves a notification when someone likes a users post.
+     *
+     * @param recipientUserId the ID of the user receiving the notification
+     * @param actorUserId the ID of the user that liked post
+     * @param postId the ID of the liked post
+     * @return the created Notification 
+     * @throws IllegalArgumentException if recipient, actor, or post does not exist
+     */
     @Transactional
     public Notification notifyLike(int recipientUserId, int actorUserId, int postId) {
         User recipient = userData.findById(recipientUserId);
@@ -100,6 +143,16 @@ public class NotificationService {
         return notificationData.save(n);
     }
 
+
+
+    /**
+     * Creates and saves a notification when a user starts following another user.
+     *
+     * @param recipientUserId the ID of the user being followed
+     * @param followerUserId the ID of the user who followed
+     * @return the created Notification 
+     * @throws IllegalArgumentException if either user does not exist
+     */
     @Transactional
     public Notification notifyFollow(int recipientUserId, int followerUserId) {
         User recipient = userData.findById(recipientUserId);
