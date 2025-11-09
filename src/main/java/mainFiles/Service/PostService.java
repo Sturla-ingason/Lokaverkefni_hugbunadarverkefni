@@ -12,6 +12,9 @@ public class PostService {
 
     @Autowired
     private PostData postData;
+    @Autowired
+    private NotificationService notificationService;
+
 
     /*
      * Creates a new post
@@ -47,6 +50,16 @@ public class PostService {
 
         post.addLike(userId);
         postData.save(post);
+
+        // notify post owner
+        User owner = post.getUser();          
+        if (owner != null && owner.getUserID() != userId) {
+            notificationService.notifyLike(
+                owner.getUserID(),            
+                userId,                       
+                postId                        
+            );
+        }
     }
 
     /*

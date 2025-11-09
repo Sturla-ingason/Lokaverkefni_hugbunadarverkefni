@@ -19,6 +19,8 @@ public class UserService {
     private PostData postData;
     @Autowired
     private CommentData commentData;
+    @Autowired
+    private NotificationService notificationService;
 
     
     /*
@@ -146,6 +148,15 @@ public class UserService {
         // Updates both users
         userData.save(userToFollow);
         userData.save(user);
+
+        // notify newly followed user
+        if (userToFollow.getUserID() != user.getUserID()) {
+            notificationService.notifyFollow(
+                userToFollow.getUserID(),
+                user.getUserID()          
+            );
+        }
+        
     }
 
 
