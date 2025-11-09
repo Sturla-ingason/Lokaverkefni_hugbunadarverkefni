@@ -14,11 +14,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserData extends JpaRepository<User, Integer> {
 
-    /*
+    /* núþegar built in þarf ekki. held eg
      * Finds a user by their user id
      * @param userId The id of the user
      * @return The user connected to the id
-     */
+    */
     User findById(int userId);
 
     /*

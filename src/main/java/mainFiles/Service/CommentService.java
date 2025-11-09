@@ -19,6 +19,8 @@ public class CommentService {
     private PostData postData;
     @Autowired
     private UserData userData;
+    @Autowired
+    private NotificationService notificationService;
 
     /*
      * Create a single comment on a post.
@@ -38,7 +40,15 @@ public class CommentService {
     
         // Create and save comment
         Comment comment = new Comment(text, user, post);
-        commentData.save(comment);
+        Comment saved = commentData.save(comment);
+
+        // Notify post creator of comment
+        if (post.getUser() != null && post.getUser().getUserID() != user.getUserID()) {
+            notificationService.notifyComment(
+                post.getUser().getUserID(),
+                saved.getCommentID()    
+            );
+            }
     }
 
 
