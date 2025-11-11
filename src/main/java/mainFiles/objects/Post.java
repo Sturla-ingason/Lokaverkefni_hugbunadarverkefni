@@ -20,7 +20,7 @@ public class Post {
     private int postID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_userid", referencedColumnName = "userID", insertable = false, updatable = false)
+    @JoinColumn(name = "user_userid", referencedColumnName = "userid", insertable = false, updatable = false)
     @NonNull
     private User user;
 
