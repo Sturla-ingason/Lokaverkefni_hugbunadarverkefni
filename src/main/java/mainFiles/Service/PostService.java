@@ -28,7 +28,7 @@ public class PostService {
             throw new IllegalArgumentException("Description cannot be empty");
         }
         Post p = new Post(user, description);
-        p.setUserId(String.valueOf(user.getUserID()));
+        p.setUserId(user.getUserID());
         return postData.save(p);
     }
 
