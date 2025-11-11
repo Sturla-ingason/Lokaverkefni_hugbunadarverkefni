@@ -36,8 +36,8 @@ public class FeedService {
         
         List<Post> posts =  new ArrayList<>();
 
-        for (User u : followedUsers) {posts.addAll(postData.findAllByUserId(String.valueOf(u.getUserID())));}
-        
+        for (User u : followedUsers) {posts.addAll(postData.findAllByUserId(u.getUserID()));}
+
         if(posts.isEmpty()){throw new IllegalStateException("Your feed is empty");}
         return posts;
     }
