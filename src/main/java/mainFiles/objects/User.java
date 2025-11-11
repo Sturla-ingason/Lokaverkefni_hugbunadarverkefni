@@ -17,6 +17,7 @@ public class User {
     //Global variables fyrir User
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid")
     private int userID;
 
     @NonNull

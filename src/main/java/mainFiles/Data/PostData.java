@@ -16,7 +16,7 @@ public interface PostData extends JpaRepository<Post, Integer> {
      * @param userId The id that is connected to the user
      * @return A list of posts from the user connected to the id
      */
-    public List<Post> findAllByUserId(String userId);
+    public List<Post> findAllByUserId(int userId);
 
 
     /*

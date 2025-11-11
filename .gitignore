@@ -1,3 +1,4 @@
 .idea/
 .vscode/
-target/target/
+.target
+/target/

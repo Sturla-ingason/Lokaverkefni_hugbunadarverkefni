@@ -20,7 +20,7 @@ public class Post {
     private int postID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_userid", referencedColumnName = "userID", insertable = false, updatable = false)
+    @JoinColumn(name = "user_userid", referencedColumnName = "userid", insertable = false, updatable = false)
     @NonNull
     private User user;
 
@@ -28,7 +28,7 @@ public class Post {
     private String description;
 
     @Column(name = "user_userid", nullable = false)
-    private String userId;
+    private int userId;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comment;
@@ -40,6 +40,9 @@ public class Post {
 
     private boolean isPostRead;
 
+    @ElementCollection
+    @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "hashtag")
     private List<String> hashtags;
 
     private List<Integer> likesOnPost = new ArrayList<>();
