@@ -4,11 +4,17 @@ import mainFiles.objects.*;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import mainFiles.Data.*;
 
+@Service
 public class SearchService {
 
-    private UserData userdata;
+    @Autowired
+    private UserData userData;
+    @Autowired
     private PostData postData;
 
     /*
@@ -21,7 +27,7 @@ public class SearchService {
             throw new IllegalArgumentException("Now username to search by");
         }
         
-        return userdata.findByUsernameContaining(username);
+        return userData.findByUsernameContaining(username);
     }
 
 
