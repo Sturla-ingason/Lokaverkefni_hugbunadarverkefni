@@ -4,6 +4,16 @@ import jakarta.transaction.Transactional;
 import mainFiles.Data.PostData;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +37,29 @@ public class PostService {
         if (description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be empty");
         }
+
         Post p = new Post(user, description);
         p.setUserId(user.getUserID());
+        p.setHashtags(extractHashtags(description));
         return postData.save(p);
     }
+
+
+
+    private static List<String> extractHashtags(String description) {
+        if (description == null) return Collections.emptyList();
+        
+        Pattern p = Pattern.compile("#\\w+");
+        Matcher m = p.matcher(description);
+
+        Set<String> set = new HashSet<>();
+        while (m.find()) {
+            set.add(m.group().substring(1).toLowerCase(Locale.ROOT));
+        }
+        return new ArrayList<>(set);
+    }
+
+
 
     /*
      * Add a like to a post from a user
@@ -108,7 +137,12 @@ public class PostService {
         }
 
         // update fields
-        post.setDescription(newDescription.trim());
+
+        String desc = newDescription.trim();
+
+        post.setDescription(desc);
+
+        post.setHashtags(extractHashtags(desc));
 
         post.setUpdatedAt(new java.util.Date());
 

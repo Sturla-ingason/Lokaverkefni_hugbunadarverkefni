@@ -1,4 +1,6 @@
 package mainFiles.dto;
+import mainFiles.objects.Notification;
+
 
 public record NotificationDto(
         Integer id,
@@ -10,7 +12,7 @@ public record NotificationDto(
         Integer postId,
         java.time.Instant createdAt
 ) {
-    public static NotificationDto from(mainFiles.objects.Notification n) {
+    public static NotificationDto from(Notification n) {
         return new NotificationDto(
             n.getNotificationID(),       
             n.getType() != null ? n.getType().name() : null,

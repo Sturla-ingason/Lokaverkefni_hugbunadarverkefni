@@ -43,7 +43,7 @@ public class Post {
     @ElementCollection
     @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "hashtag")
-    private List<String> hashtags;
+    private List<String> hashtags = new ArrayList<>();
 
     private List<Integer> likesOnPost = new ArrayList<>();
 

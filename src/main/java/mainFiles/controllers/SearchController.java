@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mainFiles.objects.*;
 import mainFiles.Service.*;
+import mainFiles.dto.PostDto;
 
 @RestController
 public class SearchController {
@@ -41,7 +42,7 @@ public class SearchController {
      * returns a list of all the posts marked with the hastag that was searched by
      */
     @GetMapping("/hashtagsearch")
-    public List<Post> hastagSearch(@RequestParam String hastag){
+    public List<PostDto> hastagSearch(@RequestParam String hastag){
 
         if(hastag != null){
             return searchService.hashTagSearch(hastag);
