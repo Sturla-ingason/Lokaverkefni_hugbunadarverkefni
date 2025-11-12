@@ -36,6 +36,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> image;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_of_upload", updatable = false)
     private Date dateOfUpload;
 
     private boolean isPostRead;
@@ -43,7 +45,7 @@ public class Post {
     @ElementCollection
     @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "hashtag")
-    private List<String> hashtags;
+    private List<String> hashtags = new ArrayList<>();
 
     private List<Integer> likesOnPost = new ArrayList<>();
 
@@ -71,7 +73,9 @@ public class Post {
     //Manages timestamps
     @PrePersist
     protected void onCreate() {
-        this.updatedAt = new Date();
+        if (this.dateOfUpload == null) {
+            this.dateOfUpload = new Date();
+        }
     }
 
     @PreUpdate
