@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import mainFiles.Service.NotificationService;
+import mainFiles.dto.NotificationDto;
+
 import java.util.List;
-import mainFiles.objects.Notification;
+
 
 
 @RestController
@@ -25,9 +27,10 @@ private NotificationService notificationService;
      * @return List of notifications
      */
     @GetMapping("/get")
-    public List<Notification> getNotifications(@RequestParam int userId) {
-        return notificationService.getForUser(userId);
+    public List<NotificationDto> get(@RequestParam int userId) {
+        return notificationService.listForUser(userId);  
     }
+    
 
     /**
      * Gets count of unread notifications for a user
