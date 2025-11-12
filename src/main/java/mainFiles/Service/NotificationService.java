@@ -10,6 +10,7 @@ import mainFiles.Data.CommentData;
 import mainFiles.Data.NotificationData;
 import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
+import mainFiles.dto.NotificationDto;
 import mainFiles.objects.Comment;
 import mainFiles.objects.Notification;
 import mainFiles.objects.Notification.NotificationType; 
@@ -29,19 +30,13 @@ public class NotificationService {
     private CommentData commentData;
 
     
-    /**
-     * Retrieves notifications for user.
-     *
-     * @param userId the ID of the user whose notifications should be retrieved
-     * @return a list of notifications belonging to that user
-     * @throws IllegalArgumentException if the user does not exist
-     */
-    public List<Notification> getForUser(int userId) {
-        User recipient = userData.findById(userId); 
-        if (recipient == null) 
-            throw new IllegalArgumentException("Recipient not found");
-        return notificationData.findByRecipientOrderByCreatedAtDesc(recipient);
-    }
+    @Transactional(readOnly = true)
+    public List<NotificationDto> listForUser(int userId) {
+    return notificationData.findAllForUserWithJoins(userId)
+            .stream()
+            .map(NotificationDto::from)
+            .toList();
+}
 
 
 

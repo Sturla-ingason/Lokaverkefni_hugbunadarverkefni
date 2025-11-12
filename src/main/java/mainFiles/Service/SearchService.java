@@ -4,11 +4,18 @@ import mainFiles.objects.*;
 import java.util.Date;
 import java.util.List;
 
-import mainFiles.Data.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import mainFiles.Data.*;
+import mainFiles.dto.PostDto;
+
+@Service
 public class SearchService {
 
-    private UserData userdata;
+    @Autowired
+    private UserData userData;
+    @Autowired
     private PostData postData;
 
     /*
@@ -21,7 +28,7 @@ public class SearchService {
             throw new IllegalArgumentException("Now username to search by");
         }
         
-        return userdata.findByUsernameContaining(username);
+        return userData.findByUsernameContaining(username);
     }
 
 
@@ -30,13 +37,20 @@ public class SearchService {
      * @Param hashtag : The marked tag for post's the user want's to find
      * return all post's maked with the hastag.
      */
-    public List<Post> hashTagSearch(String hastag){
-        if(hastag == null){
+    public List<PostDto> hashTagSearch(String hashtag){
+        if(hashtag == null){
             throw new IllegalArgumentException("No hastag inputed");
         }
-        
-        return postData.findByHashtagsContaining(hastag);
 
+        // taka # af 
+        String Htag = hashtag.startsWith("#")
+                ? hashtag.substring(1).toLowerCase()
+                : hashtag.toLowerCase();
+        
+        return postData.findByHashtagsContaining(Htag)
+                .stream()
+                .map(PostDto::from)
+                .toList();
     }
 
 
