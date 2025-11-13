@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import mainFiles.Data.CommentData;
 import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
+import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -262,7 +263,7 @@ public class UserService {
      * @return The user connected to the username
      */
     @Transactional
-    public User findByUsername(String username) {
+    public UserDto findByUsername(String username) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Missing Input");
         }
@@ -270,7 +271,7 @@ public class UserService {
         if (u == null) {
             throw new IllegalArgumentException("User not found");
         }
-        return u;
+        return UserDto.from(u);
     }
 
 }

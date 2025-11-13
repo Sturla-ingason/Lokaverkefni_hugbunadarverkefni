@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import mainFiles.objects.*;
 import mainFiles.Service.*;
 import mainFiles.dto.PostDto;
+import mainFiles.dto.UserDto;
 
 @RestController
 public class SearchController {
@@ -29,7 +30,7 @@ public class SearchController {
      * return a list of users with the name of the searched user name or with it as a substring in the name
      */
     @GetMapping("/usersearch")
-    public List<User> userSearch(@RequestParam String username){
+    public List<UserDto> userSearch(@RequestParam String username){
         
         if(username != null){
             return searchService.userSearch(username);
@@ -65,7 +66,7 @@ public class SearchController {
      * return a list of posts with inn the two diffrent dates.
      */
     @GetMapping("/datesearch")
-    public List<Post> dateSearch(
+    public List<PostDto> dateSearch(
         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") Date timeFrom,
         @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH") Date timeToo,
         @RequestParam int userId)
