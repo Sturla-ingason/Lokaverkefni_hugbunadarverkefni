@@ -3,6 +3,7 @@ package mainFiles.controllers;
 import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.AuthService;
 import mainFiles.Service.UserService;
+import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -207,7 +208,7 @@ public class UserController {
      * @return The user connected to the username
      */
     @GetMapping("/profile/by-username")
-    public User viewUserProfileByUsername(HttpSession session, @RequestParam String username) {
+    public UserDto viewUserProfileByUsername(HttpSession session, @RequestParam String username) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.CommentService;
 import mainFiles.Service.PostService;
 import mainFiles.Service.UserService;
+import mainFiles.dto.PostDto;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,13 @@ public class PostController {
      * @return The created post
      */
     @PostMapping("/create")
-    public Post createPost(@RequestBody Post post, HttpSession session) {
+    public PostDto createPost(@RequestBody Post post, HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return postService.createNewPost(user, post.getDescription());
+        Post saved = postService.createNewPost(user, post.getDescription());
+        return PostDto.from(saved); 
     }
 
     /**

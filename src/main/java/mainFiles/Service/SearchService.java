@@ -1,6 +1,7 @@
 package mainFiles.Service;
 import mainFiles.objects.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import mainFiles.Data.*;
 import mainFiles.dto.PostDto;
+import mainFiles.dto.UserDto;
 
 @Service
 public class SearchService {
@@ -23,12 +25,19 @@ public class SearchService {
      * @Param username : The name of the user to search for.
      * return all user's with that name or with that name as a substring.
      */
-    public List<User> userSearch(String username){
+    public List<UserDto> userSearch(String username){
         if(username == null){
             throw new IllegalArgumentException("Now username to search by");
         }
         
-        return userData.findByUsernameContaining(username);
+       List<User> users = userData.findByUsernameContaining(username);
+       List<UserDto> dtos = new ArrayList<>();
+
+        for (User u : users) {
+            dtos.add(UserDto.from(u));
+        }
+
+        return dtos;
     }
 
 
@@ -47,10 +56,14 @@ public class SearchService {
                 ? hashtag.substring(1).toLowerCase()
                 : hashtag.toLowerCase();
         
-        return postData.findByHashtagsContaining(Htag)
-                .stream()
-                .map(PostDto::from)
-                .toList();
+        List<Post> posts = postData.findByHashtagsContaining(Htag);
+        List<PostDto> postDtos = new ArrayList<>();
+
+        for (Post p : posts) {
+            postDtos.add(PostDto.from(p));
+        }
+
+        return postDtos;
     }
 
 
@@ -61,12 +74,19 @@ public class SearchService {
      * @Param user : in what user's post we are searching inn.
      * return a list of all the post's in the given timeframe.
      */
-    public List<Post> dateSearch(Date timeFrom, Date timeToo, User user){
+    public List<PostDto> dateSearch(Date timeFrom, Date timeToo, User user){
         if(timeFrom == null || timeToo == null || user == null){
             throw new IllegalArgumentException("Missing info");
         }
 
-        return postData.findByUserAndDateOfUploadBetween(user, timeFrom, timeToo);
+        List<Post> posts = postData.findByUserAndDateOfUploadBetween(user, timeFrom, timeToo);
+        List<PostDto> postDtos = new ArrayList<>();
+
+        for (Post p : posts) {
+            postDtos.add(PostDto.from(p));
+        }
+
+        return postDtos;
 
     }
     
