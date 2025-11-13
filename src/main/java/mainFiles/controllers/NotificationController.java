@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.NotificationService;
+import mainFiles.Service.UserService;
 import mainFiles.dto.NotificationDto;
+import mainFiles.objects.User;
 
 import java.util.List;
 
@@ -20,6 +23,8 @@ public class NotificationController {
 
 @Autowired
 private NotificationService notificationService;
+@Autowired
+private UserService userService;
 
     /**
      * Gets all notifications for a user
@@ -27,8 +32,13 @@ private NotificationService notificationService;
      * @return List of notifications
      */
     @GetMapping("/get")
-    public List<NotificationDto> get(@RequestParam int userId) {
-        return notificationService.listForUser(userId);  
+    public List<NotificationDto> get(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return notificationService.listForUser(user.getUserID());
+        
     }
     
 
@@ -38,8 +48,12 @@ private NotificationService notificationService;
      * @return Number of unread notifications
      */
     @GetMapping("/unread/count")
-    public long getUnreadCount(@RequestParam int userId) {
-        return notificationService.unreadCount(userId);
+    public long getUnreadCount(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return notificationService.unreadCount(user.getUserID());
     }
 
     /**
@@ -48,7 +62,14 @@ private NotificationService notificationService;
      * @param notificationId The ID of the notification
      */
     @PostMapping("/mark-read")
-    public void markRead(@RequestParam int userId, @RequestParam int notificationId) {
-        notificationService.markRead(notificationId, userId);
+    public void markRead(HttpSession session, @RequestParam int notificationId) {
+
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        notificationService.markRead(notificationId, user.getUserID());
+        }
     }
-}
+
