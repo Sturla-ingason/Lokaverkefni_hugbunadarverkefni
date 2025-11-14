@@ -2,9 +2,12 @@ package mainFiles.Service;
 
 import jakarta.transaction.Transactional;
 import mainFiles.Data.PostData;
+import mainFiles.dto.PostDto;
+import mainFiles.objects.Image;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PostService {
@@ -33,7 +37,7 @@ public class PostService {
      * @return The created post
      */
     @Transactional
-    public Post createNewPost(User user, String description) {
+    public Post createNewPost(User user, String description, MultipartFile[] imageFile) throws IOException {
         if (description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be empty");
         }
@@ -41,6 +45,24 @@ public class PostService {
         Post p = new Post(user, description);
         p.setUserId(user.getUserID());
         p.setHashtags(extractHashtags(description));
+
+        if (imageFile != null) {
+            for (MultipartFile file : imageFile) {
+                if (file.isEmpty()) continue;
+        
+                Image img = new Image();
+                img.setPost(p);
+                img.setImageName(file.getOriginalFilename());
+                img.setImageType(file.getContentType());
+                img.setImageData(file.getBytes());
+                img.setProfilePicture(false);
+        
+                p.getImage().add(img);   
+        }
+
+    }
+
+
         return postData.save(p);
     }
 
@@ -119,7 +141,7 @@ public class PostService {
      * @return The updated post
      */
     @Transactional
-    public Post editPostDescription(int postId, User user, String newDescription) {
+    public PostDto editPostDescription(int postId, User user, String newDescription) {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -146,7 +168,9 @@ public class PostService {
 
         post.setUpdatedAt(new java.util.Date());
 
-        return postData.save(post);
+        Post saved = postData.save(post);
+
+        return PostDto.from(saved);
     }
 
 }
