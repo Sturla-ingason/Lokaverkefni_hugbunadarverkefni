@@ -5,6 +5,7 @@ import mainFiles.Service.FeedService;
 import mainFiles.Service.UserService;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
+import mainFiles.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ public class FeedController {
      * @return The users feed as a list og posts
      */
     @GetMapping("/getfeed")
-    public List<Post> getFeed(HttpSession session) {
+    public List<PostDto> getFeed(HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         return feedService.generateFeed(user);
     }
