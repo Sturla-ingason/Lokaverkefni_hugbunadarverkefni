@@ -1,5 +1,7 @@
 package mainFiles.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ public class Image {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Post post;
 
     //Mögulega bæta við fyrir profile picture
@@ -32,6 +35,7 @@ public class Image {
     @Lob
     @Basic(fetch = FetchType.LAZY) //Veit ekki alveg hvað þetta gerir en ChatGPT!!
     @Column(nullable = false)
+    @JsonIgnore
     private byte[] imageData;
 
 }

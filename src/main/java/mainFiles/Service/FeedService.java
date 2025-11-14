@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
+import mainFiles.dto.PostDto;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class FeedService {
      * @return List of posts
      */
     @Transactional
-    public List<Post> generateFeed(User user){
+    public List<PostDto> generateFeed(User user){
         List<User> followedUsers = userService.getAllFollowedByUser(user);
         
         if(followedUsers.isEmpty()){throw new IllegalStateException("You don't follow any users");}
@@ -39,7 +40,13 @@ public class FeedService {
         for (User u : followedUsers) {posts.addAll(postData.findAllByUserId(u.getUserID()));}
 
         if(posts.isEmpty()){throw new IllegalStateException("Your feed is empty");}
-        return posts;
+        
+        List<PostDto> dtoList = new ArrayList<>();
+        for (Post p : posts) {
+            dtoList.add(PostDto.from(p));
+        }
+
+        return dtoList;
     }
 
     //TODO

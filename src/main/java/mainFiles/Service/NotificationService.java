@@ -1,5 +1,6 @@
 package mainFiles.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,16 @@ public class NotificationService {
     
     @Transactional(readOnly = true)
     public List<NotificationDto> listForUser(int userId) {
-    return notificationData.findAllForUserWithJoins(userId)
-            .stream()
-            .map(NotificationDto::from)
-            .toList();
-}
+
+        List<Notification> notifications = notificationData.findAllForUserWithJoins(userId);
+
+        List<NotificationDto> dtos = new ArrayList<>();
+
+        for (Notification n : notifications) {
+            dtos.add(NotificationDto.from(n));
+        }
+       return dtos;
+    }
 
 
 

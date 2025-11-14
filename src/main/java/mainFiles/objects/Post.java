@@ -34,7 +34,7 @@ public class Post {
     private List<Comment> comment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> image;
+    private List<Image> image = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_of_upload", updatable = false)
@@ -90,5 +90,18 @@ public class Post {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
+    @Transient
+    public List<Long> getImageIds() {
+        if (image == null) return null;
+
+        List<Long> ids = new ArrayList<>();
+        for (Image img : image) {
+            ids.add(img.getId());
+        }
+        return ids;
+    }
+
 
 }

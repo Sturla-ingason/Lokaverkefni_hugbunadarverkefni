@@ -7,8 +7,12 @@ import mainFiles.Service.UserService;
 import mainFiles.dto.PostDto;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/post")
@@ -59,12 +63,14 @@ public class PostController {
      * @return The created post
      */
     @PostMapping("/create")
-    public PostDto createPost(@RequestBody Post post, HttpSession session) {
+    public PostDto createPost(HttpSession session, @RequestParam String description,
+                            @RequestParam(required = false, name = "image") MultipartFile[] imageFile) throws IOException {
+
         User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        Post saved = postService.createNewPost(user, post.getDescription());
+        Post saved = postService.createNewPost(user, description, imageFile);
         return PostDto.from(saved); 
     }
 
@@ -108,7 +114,7 @@ public class PostController {
      * @return The updated post
      */
     @PutMapping("/edit")
-    public Post editPost(HttpSession session,
+    public PostDto editPost(HttpSession session,
             @RequestParam int postId,
             @RequestParam String description) {
         Object sid = session.getAttribute("userId");
@@ -116,7 +122,9 @@ public class PostController {
             throw new IllegalStateException("No active user found");
         }
         User user = userService.findByID((int) sid);
+
         return postService.editPostDescription(postId, user, description);
+        
     }
 
 }
