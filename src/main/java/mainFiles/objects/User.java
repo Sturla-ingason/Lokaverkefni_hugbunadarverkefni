@@ -50,29 +50,46 @@ public class User {
     )
     private List<User> followers = new ArrayList<>();
 
-    //Follow another user
+
+    /*
+     * Follow another user
+     */
     public void follow(User user) {
         if (!following.contains(user)) {
             following.add(user);
         }
     }
 
-    //Unfollow another user
+
+    /*
+     * Unfollow another user
+     */
     public void unfollow(User user) {
         following.remove(user);
     }
 
-    //Get how many followers a user has
+
+    /*
+     * get the follower count of a user
+     * @return : the follower count of a user
+     */
     public int getFollowerCount() {
         return followers.size();
     }
 
-    //Get how many this user follows
+
+    /*
+     * get the amount of users following this user
+     * @return : count of following
+     */
     public int getFollowingCount() {
         return following.size();
     }
 
-    //Remove a follower
+
+    /*
+     * Remove a user from your following list
+     */
     public void removeFollower(User user) {
         followers.remove(user);
     }
