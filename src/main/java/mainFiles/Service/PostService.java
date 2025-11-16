@@ -58,16 +58,18 @@ public class PostService {
                 img.setProfilePicture(false);
         
                 p.getImage().add(img);   
-        }
+            }
 
-    }
+        }
 
 
         return postData.save(p);
     }
 
 
-
+    /*
+     * 
+     */
     private static List<String> extractHashtags(String description) {
         if (description == null) return Collections.emptyList();
         

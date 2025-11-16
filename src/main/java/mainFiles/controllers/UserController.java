@@ -1,8 +1,7 @@
 package mainFiles.controllers;
 
 import jakarta.servlet.http.HttpSession;
-import mainFiles.Service.AuthService;
-import mainFiles.Service.UserService;
+import mainFiles.Service.*;
 import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private AuthService authService;
 
 
     /*

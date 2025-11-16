@@ -26,7 +26,7 @@ private NotificationService notificationService;
 @Autowired
 private UserService userService;
 
-    /**
+    /*
      * Gets all notifications for a user
      * @param userId The ID of the user
      * @return List of notifications
@@ -42,7 +42,7 @@ private UserService userService;
     }
     
 
-    /**
+    /*
      * Gets count of unread notifications for a user
      * @param userId The ID of the user
      * @return Number of unread notifications
@@ -56,7 +56,7 @@ private UserService userService;
         return notificationService.unreadCount(user.getUserID());
     }
 
-    /**
+    /*
      * Marks one notification as read
      * @param userId The ID of the user
      * @param notificationId The ID of the notification

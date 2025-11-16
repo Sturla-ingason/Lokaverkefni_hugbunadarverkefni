@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import mainFiles.objects.*;
 
 @Entity
 @Getter
@@ -28,6 +29,7 @@ public class User {
     private String password;
     private String bio;
     private int imageId;
+    private Image image;
 
     @JsonIgnore
     @ManyToMany

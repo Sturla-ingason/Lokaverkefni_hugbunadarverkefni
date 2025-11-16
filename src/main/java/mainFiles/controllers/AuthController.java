@@ -2,10 +2,13 @@ package mainFiles.controllers;
 
 import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.AuthService;
-import mainFiles.Service.UserService;
 import mainFiles.objects.User;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/auth")
@@ -13,8 +16,6 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-    @Autowired
-    private UserService userService;
 
     /*
      *  Creates and saves a new user based on the information
@@ -23,8 +24,8 @@ public class AuthController {
      * @return The user that was signed up
      */
     @PostMapping("/signup")
-    public User SignUpp(@RequestBody User user){
-        return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername());
+    public User SignUpp(@RequestBody User user, @RequestParam(required = false, name = "image") MultipartFile[] imageFile) throws IOException{
+        return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername(), imageFile);
     }
 
 

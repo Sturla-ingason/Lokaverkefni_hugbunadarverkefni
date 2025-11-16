@@ -1,11 +1,7 @@
 package mainFiles.Service;
 
-import mainFiles.Data.CommentData;
-import mainFiles.Data.PostData;
-import mainFiles.Data.UserData;
-import mainFiles.objects.Comment;
-import mainFiles.objects.Post;
-import mainFiles.objects.User;
+import mainFiles.Data.*;
+import mainFiles.objects.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +13,6 @@ public class CommentService {
     private CommentData commentData;
     @Autowired
     private PostData postData;
-    @Autowired
-    private UserData userData;
     @Autowired
     private NotificationService notificationService;
 

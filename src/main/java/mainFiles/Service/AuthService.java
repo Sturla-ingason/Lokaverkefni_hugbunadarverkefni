@@ -1,9 +1,13 @@
 package mainFiles.Service;
 
 import mainFiles.Data.UserData;
-import mainFiles.objects.User;
+import mainFiles.objects.*;
+
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -17,9 +21,10 @@ public class AuthService {
      * @param email Users email address connected to the account.
      * @param password Users password for the account.
      * @param userName the username for the account.
+     * @param image : the pictre the user want's to have as their profile picture
      * @return the new user we just created
      */
-    public User signUpp(String email, String password, String userName){
+    public User signUpp(String email, String password, String userName, MultipartFile[] image)throws IOException{
         if(email == null || password == null || userName == null){
             throw new IllegalArgumentException("Missing input");
         }
@@ -32,6 +37,24 @@ public class AuthService {
         }
 
         User user = new User(userName, email, password);
+        
+        //sets profile picture for the user
+        if(image != null){
+
+            for(MultipartFile file : image){
+                if(file.isEmpty()) continue;
+
+                Image img = new Image();
+                img.setImageName(file.getOriginalFilename());
+                img.setImageType(file.getContentType());
+                img.setImageData(file.getBytes());
+                img.setProfilePicture(true);
+
+                user.setImage(img);
+            }
+
+        }
+
         userData.save(user);
         return user;
     }

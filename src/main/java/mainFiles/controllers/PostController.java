@@ -25,7 +25,7 @@ public class PostController {
     @Autowired
     private CommentService commentService;
 
-    /**
+    /*
      * Likes a post
      * 
      * @param postId  The post to be liked
@@ -40,7 +40,7 @@ public class PostController {
         postService.likePost(postId, userId);
     }
 
-    /**
+    /*
      * unlikes a post
      * 
      * @param postId  The post to unlike
@@ -55,7 +55,7 @@ public class PostController {
         postService.unlikePost(postId, userId);
     }
 
-    /**
+    /*
      * Creates a new post
      * 
      * @param post    What the post should contain
@@ -74,7 +74,7 @@ public class PostController {
         return PostDto.from(saved); 
     }
 
-    /**
+    /*
      * Creates a new comment
      * 
      * @param postId  The id of the post to be commented on
@@ -90,7 +90,7 @@ public class PostController {
         commentService.createComment(postId, user, text);
     }
 
-    /**
+    /*
      * Delets a comment
      * 
      * @param session   The current session
@@ -105,7 +105,7 @@ public class PostController {
         commentService.deleteComment(commentId, user);
     }
 
-    /**
+    /*
      * Edits a post's description
      * 
      * @param session     The current session

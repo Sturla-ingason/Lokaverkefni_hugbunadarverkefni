@@ -3,8 +3,7 @@ package mainFiles.controllers;
 import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.FeedService;
 import mainFiles.Service.UserService;
-import mainFiles.objects.Post;
-import mainFiles.objects.User;
+import mainFiles.objects.*;
 import mainFiles.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ public class FeedController {
     @Autowired
     private UserService userService;
 
-    /**
+    /*
      * Gets the feed for the current user
      * @param session The ongoing session
      * @return The users feed as a list og posts
