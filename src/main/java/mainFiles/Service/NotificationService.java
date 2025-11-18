@@ -30,7 +30,9 @@ public class NotificationService {
     @Autowired 
     private CommentData commentData;
 
-    
+    /*
+     * 
+     */
     @Transactional(readOnly = true)
     public List<NotificationDto> listForUser(int userId) {
 
@@ -46,7 +48,7 @@ public class NotificationService {
 
 
 
-    /**
+    /*
      * Counts how many notifications a user has that are still unread.
      *
      * @param userId the ID of the user
@@ -61,7 +63,7 @@ public class NotificationService {
     }
 
    
-    /**
+    /*
      * Marks a specific notification as read only if the user
      * requesting the change is the recipient of the notification.
      *
@@ -84,7 +86,7 @@ public class NotificationService {
     }
  
 
-    /**
+    /*
      * Creates and saves a notification when someone comments on a users post
      *
      * @param recipientUserId the ID of the user who should receive the notification
@@ -117,7 +119,7 @@ public class NotificationService {
     }
 
 
-    /**
+    /*
      * Creates and saves a notification when someone likes a users post.
      *
      * @param recipientUserId the ID of the user receiving the notification
@@ -146,7 +148,7 @@ public class NotificationService {
 
 
 
-    /**
+    /*
      * Creates and saves a notification when a user starts following another user.
      *
      * @param recipientUserId the ID of the user being followed
