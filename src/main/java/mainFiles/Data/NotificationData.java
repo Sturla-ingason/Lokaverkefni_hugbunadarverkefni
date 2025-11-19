@@ -25,6 +25,11 @@ public interface NotificationData extends JpaRepository<Notification, Integer> {
     int countByRecipientAndIsReadFalse(User recipient);
 
     void deleteByComment(Comment comment);
+
+    void deleteByRecipient(User user);
+
+    void deleteByActor(User user);
+
 }
 
 
