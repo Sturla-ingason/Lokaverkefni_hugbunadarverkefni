@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import mainFiles.Data.CommentData;
 import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
+import mainFiles.Data.NotificationData;
 import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class UserService {
     private CommentData commentData;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private NotificationData notificationData;
 
     
     /*
@@ -49,10 +52,21 @@ public class UserService {
 
         // Delete all the comments from user
         commentData.findAll().forEach(comment -> {
-            if (comment.getUser() == user) {
-                commentData.delete(comment);
-            }
-        });
+            if (comment.getUser() != null
+            && comment.getUser().getUserID() == user.getUserID()) {
+                
+            notificationData.deleteByComment(comment);
+
+            commentData.delete(comment);
+        }
+    });
+
+        // delete all likes
+        postData.findAll().forEach(post -> post.removeLike(user.getUserID()));
+
+        //Delete notifications involving this user
+        notificationData.deleteByRecipient(user);
+        notificationData.deleteByActor(user);
 
         userData.delete(user);
     }
