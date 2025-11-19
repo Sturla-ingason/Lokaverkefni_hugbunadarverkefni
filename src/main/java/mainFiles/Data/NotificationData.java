@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import mainFiles.objects.Comment;
 import mainFiles.objects.Notification;
 import mainFiles.objects.User;
 
@@ -22,6 +23,8 @@ public interface NotificationData extends JpaRepository<Notification, Integer> {
     """)
     List<Notification> findAllForUserWithJoins(@Param("userId") Integer userId);
     int countByRecipientAndIsReadFalse(User recipient);
+
+    void deleteByComment(Comment comment);
 }
 
 

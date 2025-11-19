@@ -15,6 +15,8 @@ public class CommentService {
     private PostData postData;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private NotificationData notificationData;
 
     /*
      * Create a single comment on a post.
@@ -59,6 +61,9 @@ public class CommentService {
         if (comment.getUser().getUserID() != user.getUserID()) {
             throw new IllegalArgumentException("You can only delete your own comment");
         }
+
+        notificationData.deleteByComment(comment);
+
         commentData.delete(comment);
     }
 }
