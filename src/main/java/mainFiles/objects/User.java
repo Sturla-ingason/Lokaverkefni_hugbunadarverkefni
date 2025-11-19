@@ -28,7 +28,7 @@ public class User {
     private String password;
     private String bio;
     private int imageId;
-    
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
 
