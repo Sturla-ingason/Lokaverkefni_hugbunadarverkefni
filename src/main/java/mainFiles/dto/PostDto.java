@@ -1,5 +1,6 @@
 package mainFiles.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import mainFiles.objects.Comment;
@@ -13,9 +14,20 @@ public record PostDto(
     String description,
     List<String> hashtags,
     Date dateOfUpload,
-    List<Comment> comments
+    List<CommentDto> comments
 ) {
+
     public static PostDto from(Post p) {
+    List<CommentDto> commentDtos = null;
+
+    if (p.getComment() != null) {
+        commentDtos = new ArrayList<>();
+        for (Comment c : p.getComment()) {
+            commentDtos.add(CommentDto.from(c));
+        }
+    }
+
+
         return new PostDto(
             p.getPostID(),
             p.getUser() != null ? p.getUser().getUserID() : null,
@@ -24,9 +36,10 @@ public record PostDto(
             p.getDescription(),
             p.getHashtags(),
             p.getDateOfUpload(),
-            p.getComment()
+            commentDtos
         );
     }
 }
+
 
 
