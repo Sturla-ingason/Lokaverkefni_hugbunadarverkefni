@@ -175,4 +175,22 @@ public class PostService {
         return PostDto.from(saved);
     }
 
+
+    @Transactional
+    public void deletePost(int postID, User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        Post post = postData.findById(postID)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        
+        if (post.getUser() == null || post.getUser().getUserID() != user.getUserID()) {
+            throw new IllegalArgumentException("You can only edit your own post");
+        }
+
+        postData.delete(post);
+
+    }
+
 }

@@ -13,6 +13,10 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/post")
@@ -125,6 +129,17 @@ public class PostController {
 
         return postService.editPostDescription(postId, user, description);
         
+    }
+
+
+    @DeleteMapping("/delete")
+    public void deletePost(@RequestParam int postID, HttpSession session){
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        postService.deletePost(postID, user);
     }
 
 }
