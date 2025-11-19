@@ -3,6 +3,8 @@ package mainFiles.Service;
 import jakarta.transaction.Transactional;
 import mainFiles.Data.PostData;
 import mainFiles.dto.PostDto;
+import mainFiles.Data.CommentData;
+import mainFiles.Data.NotificationData;
 import mainFiles.objects.Image;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
@@ -28,6 +30,10 @@ public class PostService {
     private PostData postData;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private CommentData commentData;
+    @Autowired
+    private NotificationData notificationData;
 
 
     /*
@@ -188,6 +194,10 @@ public class PostService {
         if (post.getUser() == null || post.getUser().getUserID() != user.getUserID()) {
             throw new IllegalArgumentException("You can only edit your own post");
         }
+
+        notificationData.deleteByPost(post);
+
+        commentData.deleteByPost(post);
 
         postData.delete(post);
 

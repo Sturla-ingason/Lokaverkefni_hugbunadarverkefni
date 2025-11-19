@@ -14,7 +14,8 @@ public record PostDto(
     String description,
     List<String> hashtags,
     Date dateOfUpload,
-    List<CommentDto> comments
+    List<CommentDto> comments,
+    int likeCount
 ) {
 
     public static PostDto from(Post p) {
@@ -36,7 +37,8 @@ public record PostDto(
             p.getDescription(),
             p.getHashtags(),
             p.getDateOfUpload(),
-            commentDtos
+            commentDtos,
+            p.getLikesOnPost() != null ? p.getLikesOnPost().size() : 0
         );
     }
 }

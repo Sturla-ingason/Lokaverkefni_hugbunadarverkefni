@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import mainFiles.objects.Comment;
 import mainFiles.objects.Notification;
+import mainFiles.objects.Post;
 import mainFiles.objects.User;
 
 @Repository
@@ -29,6 +30,8 @@ public interface NotificationData extends JpaRepository<Notification, Integer> {
     void deleteByRecipient(User user);
 
     void deleteByActor(User user);
+
+    void deleteByPost(Post post);
 
 }
 
