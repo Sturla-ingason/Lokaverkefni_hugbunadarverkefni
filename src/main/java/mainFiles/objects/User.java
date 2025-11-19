@@ -25,6 +25,7 @@ public class User {
     @NonNull
     private String email;
     @NonNull
+    @JsonIgnore
     private String password;
     private String bio;
     private int imageId;
