@@ -22,9 +22,9 @@ public class Image {
     @JsonIgnore
     private Post post;
 
-    //Mögulega bæta við fyrir profile picture
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // private User user;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_userid")
+    private User user;
 
     private boolean isProfilePicture;
 

@@ -37,7 +37,7 @@ public class AuthService {
         }
 
         User user = new User(userName, email, password);
-        
+
         //sets profile picture for the user
         if(image != null){
 
@@ -50,13 +50,21 @@ public class AuthService {
                 img.setImageData(file.getBytes());
                 img.setProfilePicture(true);
 
+                userData.save(user);
                 user.setImage(img);
             }
 
         }
 
-        userData.save(user);
-        return user;
+        User saved = userData.save(user);
+
+        if (saved.getImage() != null && saved.getImage().getId() != null) {
+            saved.setImageId(saved.getImage().getId().intValue());
+            saved = userData.save(saved); 
+        }
+
+        return saved;
+
     }
 
 

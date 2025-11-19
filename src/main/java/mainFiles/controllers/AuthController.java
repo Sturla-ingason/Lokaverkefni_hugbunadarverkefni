@@ -24,8 +24,16 @@ public class AuthController {
      * @return The user that was signed up
      */
     @PostMapping("/signup")
-    public User SignUpp(@RequestBody User user, @RequestParam(required = false, name = "image") MultipartFile[] imageFile) throws IOException{
-        return authService.signUpp(user.getEmail(), user.getPassword(), user.getUsername(), imageFile);
+    public User signUp(
+        @RequestParam("email") String email,
+        @RequestParam("password") String password,
+        @RequestParam("username") String userName,
+        @RequestParam(value = "image", required = false) MultipartFile[] image,
+        HttpSession session
+    ) throws IOException {
+
+        User user = authService.signUpp(email, password, userName, image);
+        return user;
     }
 
 
