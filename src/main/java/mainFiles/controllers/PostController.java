@@ -9,11 +9,12 @@ import mainFiles.objects.Post;
 import mainFiles.objects.User;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -142,5 +143,15 @@ public class PostController {
 
 
     //TODO get all post by user
+    @PostMapping("/userposts")
+    public List<PostDto> getUserPosts(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        
+        return postService.getPostsByUser(user);
+    }
+    
 
 }

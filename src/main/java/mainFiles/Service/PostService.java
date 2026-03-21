@@ -203,4 +203,27 @@ public class PostService {
 
     }
 
+
+    @Transactional
+    public List<PostDto> getPostsByUser(User user){
+
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        List<Post> resault = postData.findAllByUserId(user.getUserID());
+
+        if(resault == null){
+            return null;
+        }
+
+        List<PostDto> postDtos = new ArrayList<>();
+        
+        for (Post post : resault) {
+            postDtos.add(PostDto.from(post));
+        }
+        return postDtos;
+
+    }
+
 }
