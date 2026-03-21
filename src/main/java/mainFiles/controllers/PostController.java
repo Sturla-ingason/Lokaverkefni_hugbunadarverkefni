@@ -143,7 +143,7 @@ public class PostController {
 
 
     //TODO get all post by user
-    @PostMapping("/userposts")
+    @GetMapping("/userposts")
     public List<PostDto> getUserPosts(HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
