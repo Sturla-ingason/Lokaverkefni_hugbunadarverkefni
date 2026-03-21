@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
@@ -155,6 +156,38 @@ public class UserController {
     }
 
 
+    /**
+     * Allows us to get the amount of other users ther user is following
+     * @param session
+     * @return number of how many users they are following
+     */
+    @GetMapping("/followingcount")
+    public int getFollowingCount(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        return userService.getFollowingAmount(user);
+    }
+    
+
+    /**
+     * Allows us to get all the followers of a user
+     * @param session
+     * @return number of followers for the user
+     */
+    @GetMapping("/followercxount")
+    public int getFollowersCount(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        return userService.getFollowerAmount(user);
+    }
+
+
     /*
      * Allows the logged inn user to remove a follower from their account
      * @Param session : session of the user that want's to remove a follower
@@ -182,7 +215,7 @@ public class UserController {
         return userService.findByID((int) session.getAttribute("userId"));
     }
 
-    /**
+    /*
      * Gets a user's profile by id
      * 
      * @param session The current session
@@ -197,7 +230,7 @@ public class UserController {
         return userService.findByID(userId);
     }
 
-    /**
+    /*
      * Gets a user's profile by username
      * 
      * @param session  The current session

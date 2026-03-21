@@ -140,4 +140,7 @@ public class PostController {
         postService.deletePost(postID, user);
     }
 
+
+    //TODO get all post by user
+
 }
