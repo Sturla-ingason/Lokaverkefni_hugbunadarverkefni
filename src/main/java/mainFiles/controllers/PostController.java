@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.CommentService;
 import mainFiles.Service.PostService;
 import mainFiles.Service.UserService;
+import mainFiles.dto.CommentDto;
 import mainFiles.dto.PostDto;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
@@ -14,6 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 
 
@@ -76,6 +78,16 @@ public class PostController {
         Post saved = postService.createNewPost(user, description, imageFile);
         return PostDto.from(saved, user.getUserID()); 
     }
+
+
+    @GetMapping("/comment")
+    public List<CommentDto> getAllCommentsUnderPost(@RequestParam int postId) {
+
+        return commentService.getAllCommentsUnderPost(postId);
+        
+    }
+    
+
 
     /*
      * Creates a new comment

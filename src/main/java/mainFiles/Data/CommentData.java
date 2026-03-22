@@ -5,8 +5,12 @@ import org.springframework.stereotype.Repository;
 import mainFiles.objects.Comment;
 import mainFiles.objects.Post;
 
+import java.util.List;
+
 @Repository
 public interface CommentData extends JpaRepository<Comment, Integer> {
-    
+
     void deleteByPost(Post post);
+
+    List<Comment> findByPostPostID(int postId);
 }
