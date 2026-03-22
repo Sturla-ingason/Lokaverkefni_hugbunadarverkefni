@@ -178,7 +178,7 @@ public class PostService {
 
         Post saved = postData.save(post);
 
-        return PostDto.from(saved);
+        return PostDto.from(saved, user.getUserID());
     }
 
 
@@ -220,7 +220,7 @@ public class PostService {
         List<PostDto> postDtos = new ArrayList<>();
         
         for (Post post : resault) {
-            postDtos.add(PostDto.from(post));
+            postDtos.add(PostDto.from(post, user.getUserID()));
         }
         return postDtos;
 

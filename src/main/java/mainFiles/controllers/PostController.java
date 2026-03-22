@@ -74,7 +74,7 @@ public class PostController {
             throw new IllegalStateException("No active user found");
         }
         Post saved = postService.createNewPost(user, description, imageFile);
-        return PostDto.from(saved); 
+        return PostDto.from(saved, user.getUserID()); 
     }
 
     /*

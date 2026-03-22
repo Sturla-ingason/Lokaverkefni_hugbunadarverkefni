@@ -15,19 +15,25 @@ public record PostDto(
     List<String> hashtags,
     Date dateOfUpload,
     List<CommentDto> comments,
-    int likeCount
+    int likeCount,
+    boolean likedByCurrentUser
 ) {
 
     public static PostDto from(Post p) {
-    List<CommentDto> commentDtos = null;
-
-    if (p.getComment() != null) {
-        commentDtos = new ArrayList<>();
-        for (Comment c : p.getComment()) {
-            commentDtos.add(CommentDto.from(c));
-        }
+        return from(p, -1);
     }
 
+    public static PostDto from(Post p, int currentUserId) {
+        List<CommentDto> commentDtos = null;
+
+        if (p.getComment() != null) {
+            commentDtos = new ArrayList<>();
+            for (Comment c : p.getComment()) {
+                commentDtos.add(CommentDto.from(c));
+            }
+        }
+
+        boolean liked = p.getLikesOnPost() != null && p.getLikesOnPost().contains(currentUserId);
 
         return new PostDto(
             p.getPostID(),
@@ -38,7 +44,8 @@ public record PostDto(
             p.getHashtags(),
             p.getDateOfUpload(),
             commentDtos,
-            p.getLikesOnPost() != null ? p.getLikesOnPost().size() : 0
+            p.getLikesOnPost() != null ? p.getLikesOnPost().size() : 0,
+            liked
         );
     }
 }

@@ -47,7 +47,7 @@ public class FeedService {
         
         List<PostDto> dtoList = new ArrayList<>();
         for (Post p : posts) {
-            dtoList.add(PostDto.from(p));
+            dtoList.add(PostDto.from(p, user.getUserID()));
         }
 
         return dtoList;

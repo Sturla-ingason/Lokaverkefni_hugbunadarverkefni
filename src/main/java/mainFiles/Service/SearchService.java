@@ -83,7 +83,7 @@ public class SearchService {
         List<PostDto> postDtos = new ArrayList<>();
 
         for (Post p : posts) {
-            postDtos.add(PostDto.from(p));
+            postDtos.add(PostDto.from(p, user.getUserID()));
         }
 
         return postDtos;
