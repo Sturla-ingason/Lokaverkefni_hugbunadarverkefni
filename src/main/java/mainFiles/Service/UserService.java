@@ -288,4 +288,35 @@ public class UserService {
         return UserDto.from(u);
     }
 
+    /*
+     * Updates the user's profile in one call.
+     * Only updates fields that have actually changed.
+     * @param user : The user to update
+     * @param username : New username (null to skip)
+     * @param email : New email (null to skip)
+     * @param password : New password (null or empty to skip)
+     * @param bio : New bio (null to skip)
+     */
+    @Transactional
+    public void updateProfile(User user, String username, String email, String password, String bio) {
+        if (username != null && !username.equals(user.getUsername())) {
+            if (userData.findByUsername(username) != null) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+            user.setUsername(username);
+        }
+        if (email != null && !email.equals(user.getEmail())) {
+            if (userData.findByEmail(email) != null) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            user.setEmail(email);
+        }
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(password);
+        }
+        if (bio != null) {
+            user.setBio(bio);
+        }
+        userData.save(user);
+    }
 }

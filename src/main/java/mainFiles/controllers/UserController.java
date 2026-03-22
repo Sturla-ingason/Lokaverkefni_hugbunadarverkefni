@@ -23,14 +23,23 @@ public class UserController {
      * @Param session : Session of a the User to be deleated
      * return a string confirmation that a user has been deleated
      */
-    @DeleteMapping("/delete")
+    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
     public String deleteUser(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
+        int userId = (int) session.getAttribute("userId");
+
+        // Protect test accounts (alice=3, bob=4, carol=5, dave=6)
+        List<Integer> protectedIds = List.of(3, 4, 5, 6);
+        if (protectedIds.contains(userId)) {
+            throw new IllegalStateException("Test accounts cannot be deleted");
+        }
+
+        User user = userService.findByID(userId);
         String username = user.getUsername();
         userService.delete(user);
+        session.invalidate();
         return "User " + username + " has been deleted";
     }
 
@@ -243,6 +252,24 @@ public class UserController {
             throw new IllegalStateException("No active user found");
         }
         return userService.findByUsername(username);
+    }
+
+    /*
+     * Updates the current user's profile in one call.
+     * All fields are optional — only non-null values are applied.
+     */
+    @PostMapping("/update")
+    public String updateProfile(HttpSession session,
+                                @RequestParam(required = false) String username,
+                                @RequestParam(required = false) String email,
+                                @RequestParam(required = false) String password,
+                                @RequestParam(required = false) String bio) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.updateProfile(user, username, email, password, bio);
+        return "Profile updated";
     }
 
 }
