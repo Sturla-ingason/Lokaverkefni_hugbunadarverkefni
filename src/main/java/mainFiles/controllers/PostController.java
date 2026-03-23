@@ -6,6 +6,7 @@ import mainFiles.Service.PostService;
 import mainFiles.Service.UserService;
 import mainFiles.dto.CommentDto;
 import mainFiles.dto.PostDto;
+import mainFiles.dto.UserDto;
 import mainFiles.objects.Post;
 import mainFiles.objects.User;
 
@@ -142,6 +143,17 @@ public class PostController {
         
     }
 
+
+    /*
+     * Returns the list of users who have liked a post
+     *
+     * @param postId The id of the post
+     * @return A list of UserDto (userID, username, imageId, etc.) for each liker
+     */
+    @GetMapping("/likes")
+    public List<UserDto> getPostLikers(@RequestParam int postId) {
+        return postService.getPostLikers(postId);
+    }
 
     @DeleteMapping("/delete")
     public void deletePost(@RequestParam int postID, HttpSession session){

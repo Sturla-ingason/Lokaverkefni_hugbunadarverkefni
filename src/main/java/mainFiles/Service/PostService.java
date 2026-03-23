@@ -2,7 +2,9 @@ package mainFiles.Service;
 
 import jakarta.transaction.Transactional;
 import mainFiles.Data.PostData;
+import mainFiles.Data.UserData;
 import mainFiles.dto.PostDto;
+import mainFiles.dto.UserDto;
 import mainFiles.Data.CommentData;
 import mainFiles.Data.NotificationData;
 import mainFiles.objects.Image;
@@ -28,6 +30,8 @@ public class PostService {
 
     @Autowired
     private PostData postData;
+    @Autowired
+    private UserData userData;
     @Autowired
     private NotificationService notificationService;
     @Autowired
@@ -224,6 +228,25 @@ public class PostService {
         }
         return postDtos;
 
+    }
+
+    /*
+     * Returns a list of users who have liked a given post.
+     * @param postId : The id of the post
+     * @return A list of UserDto for each user who liked the post
+     */
+    public List<UserDto> getPostLikers(int postId) {
+        Post post = postData.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        List<Integer> likerIds = post.getLikesOnPost();
+        if (likerIds == null || likerIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return userData.findAllById(likerIds).stream()
+                .map(UserDto::from)
+                .collect(java.util.stream.Collectors.toList());
     }
 
 }
