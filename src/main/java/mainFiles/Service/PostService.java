@@ -249,4 +249,17 @@ public class PostService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+
+
+    @Transactional
+    public List<PostDto> getPostsByUserId(int userId) {
+        List<Post> posts = postData.findByUser_UserID(userId);
+        List<PostDto> postDtos = new ArrayList<>();
+
+        for (Post post : posts) {
+            postDtos.add(PostDto.from(post));
+        }
+
+        return postDtos;
+}
 }

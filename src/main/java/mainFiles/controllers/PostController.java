@@ -176,6 +176,17 @@ public class PostController {
         
         return postService.getPostsByUser(user);
     }
+
+
+    // sækir alla posta útfrá id ekki session
+    @GetMapping("/profileposts")
+    public List<PostDto> getPostsByUserId(HttpSession session, @RequestParam int userId) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        return postService.getPostsByUserId(userId);
+    }
     
 
 }
