@@ -122,25 +122,29 @@ public class PostController {
     }
 
     /*
-     * Edits a post's description
-     * 
-     * @param session     The current session
-     * @param postId      The id of the post to edit
-     * @param description The new description of the post
+     * Edits a post's description and/or images.
+     * Send as multipart/form-data.
+     *
+     * @param session        The current session
+     * @param postId         The id of the post to edit
+     * @param description    The new description of the post
+     * @param removeImageIds Comma-separated or repeated param of image IDs to delete (optional)
+     * @param image          New image files to add (optional)
      * @return The updated post
      */
     @PutMapping("/edit")
     public PostDto editPost(HttpSession session,
             @RequestParam int postId,
-            @RequestParam String description) {
+            @RequestParam String description,
+            @RequestParam(required = false) List<Long> removeImageIds,
+            @RequestParam(required = false) MultipartFile[] image) throws IOException {
         Object sid = session.getAttribute("userId");
         if (sid == null) {
             throw new IllegalStateException("No active user found");
         }
         User user = userService.findByID((int) sid);
 
-        return postService.editPostDescription(postId, user, description);
-        
+        return postService.editPost(postId, user, description, removeImageIds, image);
     }
 
 
