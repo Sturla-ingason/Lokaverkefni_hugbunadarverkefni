@@ -168,32 +168,32 @@ public class UserController {
 
 
     /*
-     * Get all the followers of the current logged in user
-     * @Param session : session of the user that we want to get the followers for
-     * return a list of all the user's the logged inn user is following
+     * Get all the followers of a user by their ID
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose followers to fetch
+     * return a list of users that follow the given user
      */
     @GetMapping("/allfollowers")
-    public List<User> getAllFollowers(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
+    public List<User> getAllFollowers(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowers();
+        return userService.findByID(userId).getFollowers();
     }
-   
-    
+
+
     /*
-     * Get all the user's the logged in user is following
-     * @Param session : session of the user that we want to get all the user's that are following them
-     * return a list of all the users the logged in user is following
+     * Get all the users a given user is following
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose following list to fetch
+     * return a list of users that the given user follows
      */
     @GetMapping("/allfollowing")
-    public List<User> getAllFollowing(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
+    public List<User> getAllFollowing(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowing();
+        return userService.findByID(userId).getFollowing();
     }
 
 
