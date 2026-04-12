@@ -136,6 +136,38 @@ public class UserController {
 
 
     /*
+     * Checks if the current logged in user is following another user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if following, false otherwise
+     */
+    @GetMapping("/isfollowing")
+    public boolean isFollowing(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowing().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
+     * Checks if another user is following the current logged in user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if userID follows the active user, false otherwise
+     */
+    @GetMapping("/isfollowedby")
+    public boolean isFollowedBy(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowers().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
      * Get all the followers of the current logged in user
      * @Param session : session of the user that we want to get the followers for
      * return a list of all the user's the logged inn user is following
