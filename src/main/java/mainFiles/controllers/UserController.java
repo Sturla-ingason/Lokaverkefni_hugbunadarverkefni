@@ -190,11 +190,11 @@ public class UserController {
      * @return The user connected to the id
      */
     @GetMapping("/profile")
-    public User viewUserProfileById(HttpSession session, @RequestParam int userId) {
+    public UserDto viewUserProfileById(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return userService.findByID(userId);
+        return UserDto.from(userService.findByID(userId));
     }
 
     /**
