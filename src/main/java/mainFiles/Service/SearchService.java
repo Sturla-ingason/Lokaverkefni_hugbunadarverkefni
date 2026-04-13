@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import mainFiles.Data.*;
 import mainFiles.dto.PostDto;
@@ -54,8 +55,8 @@ public class SearchService {
         String Htag = hashtag.startsWith("#")
                 ? hashtag.substring(1).toLowerCase()
                 : hashtag.toLowerCase();
-
-        List<Post> posts = postData.findByHashtagsContaining(Htag);
+        
+        List<Post> posts = postData.searchByHashtag(Htag);
         List<PostDto> postDtos = new ArrayList<>();
 
         List<Integer> blockedIds = (currentUser != null)
