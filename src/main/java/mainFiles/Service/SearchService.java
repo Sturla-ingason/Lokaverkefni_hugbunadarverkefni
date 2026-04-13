@@ -47,6 +47,7 @@ public class SearchService {
      * @Param hashtag : The marked tag for post's the user want's to find
      * return all post's maked with the hastag.
      */
+    @Transactional
     public List<PostDto> hashTagSearch(String hashtag, User currentUser){
         if(hashtag == null){
             throw new IllegalArgumentException("No hastag inputed");
