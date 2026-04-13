@@ -2,6 +2,8 @@ package mainFiles.Data;
 
 import mainFiles.objects.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,7 +26,13 @@ public interface PostData extends JpaRepository<Post, Integer> {
      * @Param hastag : the hastag to search marked posts by
      * return a list of all posts maked by the hastag
      */
+
+    /*
     public List<Post> findByHashtagsContaining(String hastag);
+    */
+
+    @Query("select distinct p from Post p join p.hashtags h where lower(h) = lower(:hashtag)")
+    List<Post> searchByHashtag(@Param("hashtag") String hashtag);
 
      /*
       * find all post by date

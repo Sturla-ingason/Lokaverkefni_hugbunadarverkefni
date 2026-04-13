@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import mainFiles.Data.*;
 import mainFiles.dto.PostDto;
@@ -46,6 +47,7 @@ public class SearchService {
      * @Param hashtag : The marked tag for post's the user want's to find
      * return all post's maked with the hastag.
      */
+    @Transactional
     public List<PostDto> hashTagSearch(String hashtag){
         if(hashtag == null){
             throw new IllegalArgumentException("No hastag inputed");
@@ -56,7 +58,7 @@ public class SearchService {
                 ? hashtag.substring(1).toLowerCase()
                 : hashtag.toLowerCase();
         
-        List<Post> posts = postData.findByHashtagsContaining(Htag);
+        List<Post> posts = postData.searchByHashtag(Htag);
         List<PostDto> postDtos = new ArrayList<>();
 
         for (Post p : posts) {
