@@ -47,13 +47,11 @@ public class SearchService {
      * @Param hashtag : The marked tag for post's the user want's to find
      * return all post's maked with the hastag.
      */
-    @Transactional
-    public List<PostDto> hashTagSearch(String hashtag){
+    public List<PostDto> hashTagSearch(String hashtag, User currentUser){
         if(hashtag == null){
             throw new IllegalArgumentException("No hastag inputed");
         }
 
-        // taka # af 
         String Htag = hashtag.startsWith("#")
                 ? hashtag.substring(1).toLowerCase()
                 : hashtag.toLowerCase();
@@ -61,8 +59,15 @@ public class SearchService {
         List<Post> posts = postData.searchByHashtag(Htag);
         List<PostDto> postDtos = new ArrayList<>();
 
+        List<Integer> blockedIds = (currentUser != null)
+                ? currentUser.getBlockedUsers().stream().map(User::getUserID).toList()
+                : List.of();
+
         for (Post p : posts) {
-            postDtos.add(PostDto.from(p));
+            Integer authorId = p.getUser() != null ? p.getUser().getUserID() : null;
+            if (authorId == null || !blockedIds.contains(authorId)) {
+                postDtos.add(PostDto.from(p, currentUser != null ? currentUser.getUserID() : -1));
+            }
         }
 
         return postDtos;

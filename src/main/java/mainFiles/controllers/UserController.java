@@ -136,32 +136,97 @@ public class UserController {
 
 
     /*
-     * Get all the followers of the current logged in user
-     * @Param session : session of the user that we want to get the followers for
-     * return a list of all the user's the logged inn user is following
+     * Checks if the current logged in user is following another user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if following, false otherwise
+     */
+    @GetMapping("/isfollowing")
+    public boolean isFollowing(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowing().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
+     * Checks if another user is following the current logged in user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if userID follows the active user, false otherwise
+     */
+    @GetMapping("/isfollowedby")
+    public boolean isFollowedBy(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowers().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
+     * Blocks another user — their posts will be hidden from the blocker
+     */
+    @PatchMapping("/block")
+    public void blockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.block(user, userID);
+    }
+
+
+    /*
+     * Unblocks a previously blocked user
+     */
+    @PatchMapping("/unblock")
+    public void unblockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.unblock(user, userID);
+    }
+
+
+    /*
+     * Returns true if the current user has blocked the given user
+     */
+    @GetMapping("/isblocked")
+    public boolean isBlocked(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return userService.isBlocked(user, userID);
+    }
+
+
+    /*
+     * Get all the followers of a user by their ID
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose followers to fetch
+     * return a list of users that follow the given user
      */
     @GetMapping("/allfollowers")
-    public List<User> getAllFollowers(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
+    public List<User> getAllFollowers(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowers();
+        return userService.findByID(userId).getFollowers();
     }
-   
-    
+
+
     /*
-     * Get all the user's the logged in user is following
-     * @Param session : session of the user that we want to get all the user's that are following them
-     * return a list of all the users the logged in user is following
+     * Get all the users a given user is following
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose following list to fetch
+     * return a list of users that the given user follows
      */
     @GetMapping("/allfollowing")
-    public List<User> getAllFollowing(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
+    public List<User> getAllFollowing(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowing();
+        return userService.findByID(userId).getFollowing();
     }
 
 
@@ -186,7 +251,7 @@ public class UserController {
      * @param session
      * @return number of followers for the user
      */
-    @GetMapping("/followercxount")
+    @GetMapping("/followercount")
     public int getFollowersCount(HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
@@ -232,11 +297,11 @@ public class UserController {
      * @return The user connected to the id
      */
     @GetMapping("/profile")
-    public User viewUserProfileById(HttpSession session, @RequestParam int userId) {
+    public UserDto viewUserProfileById(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return userService.findByID(userId);
+        return UserDto.from(userService.findByID(userId));
     }
 
     /*

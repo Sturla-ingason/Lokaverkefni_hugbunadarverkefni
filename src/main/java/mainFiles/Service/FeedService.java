@@ -30,19 +30,20 @@ public class FeedService {
     @Transactional
     public List<PostDto> generateFeed(User user){
         List<User> followedUsers = userService.getAllFollowedByUser(user);
-        
-        if(followedUsers.isEmpty()){
-            throw new IllegalStateException("You don't follow any users");
+
+        if (followedUsers.isEmpty()) {
+            return new ArrayList<>();
         }
-        
+
+        List<Integer> blockedIds = user.getBlockedUsers()
+                .stream().map(User::getUserID).toList();
+
         List<Post> posts = new ArrayList<>();
 
         for (User u : followedUsers) {
-            posts.addAll(postData.findAllByUserId(u.getUserID()));
-        }
-
-        if(posts.isEmpty()){
-            throw new IllegalStateException("Your feed is empty");
+            if (!blockedIds.contains(u.getUserID())) {
+                posts.addAll(postData.findAllByUserId(u.getUserID()));
+            }
         }
         
         List<PostDto> dtoList = new ArrayList<>();
