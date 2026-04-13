@@ -168,6 +168,39 @@ public class UserController {
 
 
     /*
+     * Blocks another user — their posts will be hidden from the blocker
+     */
+    @PatchMapping("/block")
+    public void blockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.block(user, userID);
+    }
+
+
+    /*
+     * Unblocks a previously blocked user
+     */
+    @PatchMapping("/unblock")
+    public void unblockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.unblock(user, userID);
+    }
+
+
+    /*
+     * Returns true if the current user has blocked the given user
+     */
+    @GetMapping("/isblocked")
+    public boolean isBlocked(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return userService.isBlocked(user, userID);
+    }
+
+
+    /*
      * Get all the followers of a user by their ID
      * @Param session : active session
      * @Param userId  : the ID of the user whose followers to fetch

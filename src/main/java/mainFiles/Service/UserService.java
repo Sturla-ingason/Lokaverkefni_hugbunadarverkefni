@@ -262,6 +262,46 @@ public class UserService {
 
 
     /*
+     * Blocks a user so their posts are hidden from the blocker
+     */
+    @Transactional
+    public void block(User user, int targetId) {
+        User target = userData.findById(targetId);
+        if (target == null) throw new IllegalArgumentException("User not found");
+        if (user.getUserID() == targetId) throw new IllegalArgumentException("Cannot block yourself");
+        if (user.getBlockedUsers().stream().noneMatch(u -> u.getUserID() == targetId)) {
+            user.getBlockedUsers().add(target);
+            // Also unfollow each other if following
+            user.unfollow(target);
+            target.getFollowers().remove(user);
+            userData.save(target);
+            userData.save(user);
+        }
+    }
+
+
+    /*
+     * Unblocks a previously blocked user
+     */
+    @Transactional
+    public void unblock(User user, int targetId) {
+        User target = userData.findById(targetId);
+        if (target == null) throw new IllegalArgumentException("User not found");
+        user.getBlockedUsers().removeIf(u -> u.getUserID() == targetId);
+        userData.save(user);
+    }
+
+
+    /*
+     * Returns true if the user has blocked the target
+     */
+    @Transactional
+    public boolean isBlocked(User user, int targetId) {
+        return user.getBlockedUsers().stream().anyMatch(u -> u.getUserID() == targetId);
+    }
+
+
+    /*
      * Finds a user by their id
      * @param userId : The id of the user
      * @return The user connected to the id

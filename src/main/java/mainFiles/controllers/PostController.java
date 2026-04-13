@@ -188,7 +188,11 @@ public class PostController {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-
+        User currentUser = userService.findByID((int) session.getAttribute("userId"));
+        // Return empty list if the profile owner is blocked
+        if (userService.isBlocked(currentUser, userId)) {
+            return List.of();
+        }
         return postService.getPostsByUserId(userId);
     }
     

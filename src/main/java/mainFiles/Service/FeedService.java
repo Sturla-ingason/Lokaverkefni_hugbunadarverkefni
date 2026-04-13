@@ -35,10 +35,15 @@ public class FeedService {
             throw new IllegalStateException("You don't follow any users");
         }
         
+        List<Integer> blockedIds = user.getBlockedUsers()
+                .stream().map(User::getUserID).toList();
+
         List<Post> posts = new ArrayList<>();
 
         for (User u : followedUsers) {
-            posts.addAll(postData.findAllByUserId(u.getUserID()));
+            if (!blockedIds.contains(u.getUserID())) {
+                posts.addAll(postData.findAllByUserId(u.getUserID()));
+            }
         }
 
         if(posts.isEmpty()){

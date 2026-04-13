@@ -54,6 +54,16 @@ public class User {
     private List<User> followers = new ArrayList<>();
 
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_blocked",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "blocked_id")
+    )
+    private List<User> blockedUsers = new ArrayList<>();
+
+
     /*
      * Follow another user
      */

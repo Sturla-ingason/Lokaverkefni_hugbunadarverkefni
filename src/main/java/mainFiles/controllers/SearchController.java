@@ -1,9 +1,9 @@
 package mainFiles.controllers;
 
 import java.util.Date;
-
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,14 +47,12 @@ public class SearchController {
      * returns a list of all the posts marked with the hastag that was searched by
      */
     @GetMapping("/hashtagsearch")
-    public List<PostDto> hastagSearch(@RequestParam String hastag){
-
-        if(hastag != null){
-            return searchService.hashTagSearch(hastag);
-        }
-
-        return null;
-
+    public List<PostDto> hastagSearch(@RequestParam String hastag, HttpSession session){
+        if (hastag == null) return null;
+        User currentUser = session.getAttribute("userId") != null
+                ? userService.findByID((int) session.getAttribute("userId"))
+                : null;
+        return searchService.hashTagSearch(hastag, currentUser);
     }
 
 
