@@ -16,15 +16,14 @@ import mainFiles.objects.User;
 import java.util.List;
 
 
-
 @RestController
 @RequestMapping("/notification")
 public class NotificationController {
 
-@Autowired
-private NotificationService notificationService;
-@Autowired
-private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private UserService userService;
 
     /*
      * Gets all notifications for a user
@@ -38,7 +37,7 @@ private UserService userService;
             throw new IllegalStateException("No active user found");
         }
         return notificationService.listForUser(user.getUserID());
-        
+            
     }
     
 
@@ -70,6 +69,7 @@ private UserService userService;
         }
 
         notificationService.markRead(notificationId, user.getUserID());
-        }
+    
     }
+}
 

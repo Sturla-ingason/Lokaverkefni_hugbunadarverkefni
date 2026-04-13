@@ -1,7 +1,12 @@
 package mainFiles.Service;
 
 import mainFiles.Data.*;
+import mainFiles.dto.CommentDto;
 import mainFiles.objects.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,4 +71,24 @@ public class CommentService {
 
         commentData.delete(comment);
     }
+
+    public List<CommentDto> getAllCommentsUnderPost(int postId){
+
+        if (postId <= 0) {
+            throw new IllegalArgumentException("postId must be a positive number");
+        }
+
+        if (!postData.existsById(postId)) {
+            throw new IllegalArgumentException("No post found with id: " + postId);
+        }
+
+        List<Comment> comments = commentData.findByPostPostID(postId);
+
+        List<CommentDto> result = new ArrayList<>();
+        for (Comment c : comments) {
+            result.add(CommentDto.from(c));
+        }
+        return result;
+    }
+
 }

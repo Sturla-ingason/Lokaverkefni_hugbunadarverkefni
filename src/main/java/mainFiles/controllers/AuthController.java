@@ -60,7 +60,7 @@ public class AuthController {
      * @param session The current session
      * @return Confirmation that the user was logged out
      */
-    @GetMapping("/logout")
+    @RequestMapping(value = "/logout", method = {RequestMethod.GET, RequestMethod.POST})
     public String logOut(HttpSession session){
         if (session.getAttribute("userId") == null) {
             return "No active session found";

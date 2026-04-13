@@ -35,15 +35,20 @@ public class FeedService {
             return new ArrayList<>();
         }
 
+        List<Integer> blockedIds = user.getBlockedUsers()
+                .stream().map(User::getUserID).toList();
+
         List<Post> posts = new ArrayList<>();
 
         for (User u : followedUsers) {
-            posts.addAll(postData.findAllByUserId(u.getUserID()));
+            if (!blockedIds.contains(u.getUserID())) {
+                posts.addAll(postData.findAllByUserId(u.getUserID()));
+            }
         }
         
         List<PostDto> dtoList = new ArrayList<>();
         for (Post p : posts) {
-            dtoList.add(PostDto.from(p));
+            dtoList.add(PostDto.from(p, user.getUserID()));
         }
 
         return dtoList;

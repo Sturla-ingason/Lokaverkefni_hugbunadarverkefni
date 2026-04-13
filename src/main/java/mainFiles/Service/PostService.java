@@ -2,7 +2,9 @@ package mainFiles.Service;
 
 import jakarta.transaction.Transactional;
 import mainFiles.Data.PostData;
+import mainFiles.Data.UserData;
 import mainFiles.dto.PostDto;
+import mainFiles.dto.UserDto;
 import mainFiles.Data.CommentData;
 import mainFiles.Data.NotificationData;
 import mainFiles.objects.Image;
@@ -28,6 +30,8 @@ public class PostService {
 
     @Autowired
     private PostData postData;
+    @Autowired
+    private UserData userData;
     @Autowired
     private NotificationService notificationService;
     @Autowired
@@ -141,15 +145,18 @@ public class PostService {
     }
 
     /*
-     * Edits the description of a post.
+     * Edits a post's description and/or images.
      * Only the author of the post is allowed to edit it.
      * @param postId : The id of the post to edit
      * @param user : The user attempting the edit
      * @param newDescription : The new description of the post
+     * @param removeImageIds : IDs of existing images to remove (may be null)
+     * @param newImages : New image files to add (may be null)
      * @return The updated post
      */
     @Transactional
-    public PostDto editPostDescription(int postId, User user, String newDescription) {
+    public PostDto editPost(int postId, User user, String newDescription,
+                            List<Long> removeImageIds, MultipartFile[] newImages) throws IOException {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null");
         }
@@ -157,28 +164,41 @@ public class PostService {
             throw new IllegalArgumentException("Description cannot be empty");
         }
 
-        // get the post
         Post post = postData.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        // only author can edit
         if (post.getUser() == null || post.getUser().getUserID() != user.getUserID()) {
             throw new IllegalArgumentException("You can only edit your own post");
         }
 
-        // update fields
-
         String desc = newDescription.trim();
-
         post.setDescription(desc);
-
         post.setHashtags(extractHashtags(desc));
-
         post.setUpdatedAt(new java.util.Date());
 
-        Post saved = postData.save(post);
+        // remove images by id (orphanRemoval=true on Post.image handles DB deletion)
+        if (removeImageIds != null && !removeImageIds.isEmpty()) {
+            post.getImage().removeIf(img -> removeImageIds.contains(img.getId()));
+        }
 
-        return PostDto.from(saved);
+        // add new images
+        if (newImages != null) {
+            for (MultipartFile file : newImages) {
+                if (file == null || file.isEmpty()) continue;
+
+                Image img = new Image();
+                img.setPost(post);
+                img.setImageName(file.getOriginalFilename());
+                img.setImageType(file.getContentType());
+                img.setImageData(file.getBytes());
+                img.setProfilePicture(false);
+
+                post.getImage().add(img);
+            }
+        }
+
+        Post saved = postData.save(post);
+        return PostDto.from(saved, user.getUserID());
     }
 
 
@@ -203,4 +223,59 @@ public class PostService {
 
     }
 
+
+    @Transactional
+    public List<PostDto> getPostsByUser(User user){
+
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        List<Post> resault = postData.findAllByUserId(user.getUserID());
+
+        if(resault == null){
+            return null;
+        }
+
+        List<PostDto> postDtos = new ArrayList<>();
+        
+        for (Post post : resault) {
+            postDtos.add(PostDto.from(post, user.getUserID()));
+        }
+        return postDtos;
+
+    }
+
+    /*
+     * Returns a list of users who have liked a given post.
+     * @param postId : The id of the post
+     * @return A list of UserDto for each user who liked the post
+     */
+    public List<UserDto> getPostLikers(int postId) {
+        Post post = postData.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        List<Integer> likerIds = post.getLikesOnPost();
+        if (likerIds == null || likerIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return userData.findAllById(likerIds).stream()
+                .map(UserDto::from)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+
+
+    @Transactional
+    public List<PostDto> getPostsByUserId(int userId) {
+        List<Post> posts = postData.findByUser_UserID(userId);
+        List<PostDto> postDtos = new ArrayList<>();
+
+        for (Post post : posts) {
+            postDtos.add(PostDto.from(post));
+        }
+
+        return postDtos;
+}
 }

@@ -262,6 +262,48 @@ public class UserService {
 
 
     /*
+     * Blocks a user so their posts are hidden from the blocker
+     */
+    @Transactional
+    public void block(User blocker, int targetId) {
+        // Reload fresh managed entities inside the transaction to avoid lazy loading issues
+        User user = userData.findById(blocker.getUserID());
+        User target = userData.findById(targetId);
+        if (target == null) throw new IllegalArgumentException("User not found");
+        if (user.getUserID() == targetId) throw new IllegalArgumentException("Cannot block yourself");
+        if (user.getBlockedUsers().stream().noneMatch(u -> u.getUserID() == targetId)) {
+            user.getBlockedUsers().add(target);
+            // Also unfollow each other if following
+            user.getFollowing().remove(target);
+            target.getFollowers().remove(user);
+            userData.save(target);
+            userData.save(user);
+        }
+    }
+
+
+    /*
+     * Unblocks a previously blocked user
+     */
+    @Transactional
+    public void unblock(User blocker, int targetId) {
+        User user = userData.findById(blocker.getUserID());
+        user.getBlockedUsers().removeIf(u -> u.getUserID() == targetId);
+        userData.save(user);
+    }
+
+
+    /*
+     * Returns true if the user has blocked the target
+     */
+    @Transactional
+    public boolean isBlocked(User blocker, int targetId) {
+        User user = userData.findById(blocker.getUserID());
+        return user.getBlockedUsers().stream().anyMatch(u -> u.getUserID() == targetId);
+    }
+
+
+    /*
      * Finds a user by their id
      * @param userId : The id of the user
      * @return The user connected to the id
@@ -288,4 +330,35 @@ public class UserService {
         return UserDto.from(u);
     }
 
+    /*
+     * Updates the user's profile in one call.
+     * Only updates fields that have actually changed.
+     * @param user : The user to update
+     * @param username : New username (null to skip)
+     * @param email : New email (null to skip)
+     * @param password : New password (null or empty to skip)
+     * @param bio : New bio (null to skip)
+     */
+    @Transactional
+    public void updateProfile(User user, String username, String email, String password, String bio) {
+        if (username != null && !username.equals(user.getUsername())) {
+            if (userData.findByUsername(username) != null) {
+                throw new IllegalArgumentException("Username already exists");
+            }
+            user.setUsername(username);
+        }
+        if (email != null && !email.equals(user.getEmail())) {
+            if (userData.findByEmail(email) != null) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            user.setEmail(email);
+        }
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(password);
+        }
+        if (bio != null) {
+            user.setBio(bio);
+        }
+        userData.save(user);
+    }
 }

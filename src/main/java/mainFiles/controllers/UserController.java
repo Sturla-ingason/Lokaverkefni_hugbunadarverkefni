@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
@@ -22,14 +23,23 @@ public class UserController {
      * @Param session : Session of a the User to be deleated
      * return a string confirmation that a user has been deleated
      */
-    @DeleteMapping("/delete")
+    @RequestMapping(value = "/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
     public String deleteUser(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
+        int userId = (int) session.getAttribute("userId");
+
+        // Protect test accounts (alice=3, bob=4, carol=5, dave=6)
+        List<Integer> protectedIds = List.of(3, 4, 5, 6);
+        if (protectedIds.contains(userId)) {
+            throw new IllegalStateException("Test accounts cannot be deleted");
+        }
+
+        User user = userService.findByID(userId);
         String username = user.getUsername();
         userService.delete(user);
+        session.invalidate();
         return "User " + username + " has been deleted";
     }
 
@@ -126,32 +136,129 @@ public class UserController {
 
 
     /*
-     * Get all the followers of the current logged in user
-     * @Param session : session of the user that we want to get the followers for
-     * return a list of all the user's the logged inn user is following
+     * Checks if the current logged in user is following another user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if following, false otherwise
+     */
+    @GetMapping("/isfollowing")
+    public boolean isFollowing(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowing().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
+     * Checks if another user is following the current logged in user
+     * @Param session : session of the logged in user
+     * @Param userID : The ID of the user to check
+     * return true if userID follows the active user, false otherwise
+     */
+    @GetMapping("/isfollowedby")
+    public boolean isFollowedBy(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return user.getFollowers().stream().anyMatch(u -> u.getUserID() == userID);
+    }
+
+
+    /*
+     * Blocks another user — their posts will be hidden from the blocker
+     */
+    @PatchMapping("/block")
+    public void blockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.block(user, userID);
+    }
+
+
+    /*
+     * Unblocks a previously blocked user
+     */
+    @PatchMapping("/unblock")
+    public void unblockUser(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.unblock(user, userID);
+    }
+
+
+    /*
+     * Returns true if the current user has blocked the given user
+     */
+    @GetMapping("/isblocked")
+    public boolean isBlocked(HttpSession session, @RequestParam int userID) {
+        if (session.getAttribute("userId") == null) throw new IllegalStateException("No active user found");
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return userService.isBlocked(user, userID);
+    }
+
+
+    /*
+     * Get all the followers of a user by their ID
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose followers to fetch
+     * return a list of users that follow the given user
      */
     @GetMapping("/allfollowers")
-    public List<User> getAllFollowers(HttpSession session) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
+    public List<User> getAllFollowers(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowers();
+        return userService.findByID(userId).getFollowers();
     }
-   
-    
+
+
     /*
-     * Get all the user's the logged in user is following
-     * @Param session : session of the user that we want to get all the user's that are following them
-     * return a list of all the users the logged in user is following
+     * Get all the users a given user is following
+     * @Param session : active session
+     * @Param userId  : the ID of the user whose following list to fetch
+     * return a list of users that the given user follows
      */
     @GetMapping("/allfollowing")
-    public List<User> getAllFollowing(HttpSession session) {
+    public List<User> getAllFollowing(HttpSession session, @RequestParam int userId) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        return userService.findByID(userId).getFollowing();
+    }
+
+
+    /**
+     * Allows us to get the amount of other users ther user is following
+     * @param session
+     * @return number of how many users they are following
+     */
+    @GetMapping("/followingcount")
+    public int getFollowingCount(HttpSession session) {
         User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return user.getFollowing();
+
+        return userService.getFollowingAmount(user);
+    }
+    
+
+    /**
+     * Allows us to get all the followers of a user
+     * @param session
+     * @return number of followers for the user
+     */
+    @GetMapping("/followercount")
+    public int getFollowersCount(HttpSession session) {
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        return userService.getFollowerAmount(user);
     }
 
 
@@ -182,7 +289,7 @@ public class UserController {
         return userService.findByID((int) session.getAttribute("userId"));
     }
 
-    /**
+    /*
      * Gets a user's profile by id
      * 
      * @param session The current session
@@ -197,7 +304,7 @@ public class UserController {
         return UserDto.from(userService.findByID(userId));
     }
 
-    /**
+    /*
      * Gets a user's profile by username
      * 
      * @param session  The current session
@@ -210,6 +317,24 @@ public class UserController {
             throw new IllegalStateException("No active user found");
         }
         return userService.findByUsername(username);
+    }
+
+    /*
+     * Updates the current user's profile in one call.
+     * All fields are optional — only non-null values are applied.
+     */
+    @PostMapping("/update")
+    public String updateProfile(HttpSession session,
+                                @RequestParam(required = false) String username,
+                                @RequestParam(required = false) String email,
+                                @RequestParam(required = false) String password,
+                                @RequestParam(required = false) String bio) {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.updateProfile(user, username, email, password, bio);
+        return "Profile updated";
     }
 
 }

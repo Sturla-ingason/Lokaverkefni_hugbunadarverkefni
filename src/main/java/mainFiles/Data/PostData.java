@@ -35,6 +35,8 @@ public interface PostData extends JpaRepository<Post, Integer> {
       */
       public List<Post> findByUserAndDateOfUploadBetween(User user, Date timeFrom, Date timeTo);
 
+      List<Post> findByUser_UserID(int userId);
+
 
 }
 
