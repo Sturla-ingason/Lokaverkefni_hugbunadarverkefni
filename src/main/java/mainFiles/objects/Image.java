@@ -24,6 +24,7 @@ public class Image {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_userid")
+    @JsonIgnore
     private User user;
 
     private boolean isProfilePicture;
