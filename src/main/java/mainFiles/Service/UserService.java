@@ -51,7 +51,14 @@ public class UserService {
         user.getFollowers().clear();
         user.getFollowing().clear();
 
-        // Delete all the likes from the user
+        // Delete all posts by this user (cascades to their images and comments)
+        postData.findAllByUserId(user.getUserID()).forEach(post -> {
+            notificationData.deleteByPost(post);
+            commentData.deleteByPost(post);
+            postData.delete(post);
+        });
+
+        // Delete all the likes from the user on other people's posts
         postData.findAll().forEach(postData -> {
             postData.removeLike(user.getUserID());
         });
