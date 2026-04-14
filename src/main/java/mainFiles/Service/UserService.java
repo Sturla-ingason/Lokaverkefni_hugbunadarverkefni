@@ -372,14 +372,16 @@ public class UserService {
         userData.save(user);
     }
 
+    
     @Transactional
-    public void updateProfilePicture(User user, MultipartFile imageFile) throws IOException {
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-
+    public void updateProfilePicture(int userId, MultipartFile imageFile) throws IOException {
         if (imageFile == null || imageFile.isEmpty()) {
             return;
+        }
+
+        User user = userData.findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
         }
 
         Image image = user.getImage();

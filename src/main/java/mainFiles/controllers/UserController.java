@@ -360,8 +360,8 @@ public class UserController {
             throw new IllegalStateException("No active user found");
         }
 
-        User user = userService.findByID((int) session.getAttribute("userId"));
-        userService.updateProfilePicture(user, imageFile);
+        int userId = (int) session.getAttribute("userId");
+        userService.updateProfilePicture(userId, imageFile);
 
         return "Profile picture updated";
     }
