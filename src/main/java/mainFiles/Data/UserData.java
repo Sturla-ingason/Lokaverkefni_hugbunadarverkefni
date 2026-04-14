@@ -5,7 +5,9 @@ import mainFiles.objects.User;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -59,5 +61,26 @@ public interface UserData extends JpaRepository<User, Integer> {
      * return a list of all users with the username or with the username as a substring
      */
     List<User> findByUsernameContaining(String username);
+
+    /*
+     * Removes all rows from user_blocked where this user is either the blocker or the blocked party.
+     */
+    @Modifying
+    @Query(value = "DELETE FROM user_blocked WHERE user_id = :userId OR blocked_id = :userId", nativeQuery = true)
+    void deleteAllBlockEntriesForUser(@Param("userId") int userId);
+
+    /*
+     * Removes all rows from user_following where this user is either side.
+     */
+    @Modifying
+    @Query(value = "DELETE FROM user_following WHERE user_id = :userId OR following_id = :userId", nativeQuery = true)
+    void deleteAllFollowingEntriesForUser(@Param("userId") int userId);
+
+    /*
+     * Removes all rows from user_followers where this user is either side.
+     */
+    @Modifying
+    @Query(value = "DELETE FROM user_followers WHERE user_id = :userId OR follower_id = :userId", nativeQuery = true)
+    void deleteAllFollowerEntriesForUser(@Param("userId") int userId);
 
 }

@@ -44,33 +44,40 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("The user can not be empty");
         }
-        // Delete the user in any following and followers list
-        user.getFollowers().forEach(f -> f.getFollowing().remove(user));
-        user.getFollowing().forEach(f -> f.getFollowers().remove(user));
-        // Delete the users following and followers list
-        user.getFollowers().clear();
-        user.getFollowing().clear();
 
-        // Delete all the likes from the user
-        postData.findAll().forEach(postData -> {
-            postData.removeLike(user.getUserID());
+        int uid = user.getUserID();
+
+        // 1. Clean up all follow/block join tables via native queries (handles both sides)
+        userData.deleteAllFollowingEntriesForUser(uid);
+        userData.deleteAllFollowerEntriesForUser(uid);
+        userData.deleteAllBlockEntriesForUser(uid);
+
+        // 2. Delete all posts owned by this user (with their comments and images)
+        postData.findAllByUserId(uid).forEach(post -> {
+            // Delete notifications for comments on this post first (FK constraint)
+            if (post.getComment() != null) {
+                post.getComment().forEach(comment -> notificationData.deleteByComment(comment));
+            }
+            // Delete notifications for the post itself
+            notificationData.deleteByPost(post);
+            // Delete comments explicitly (avoids double-delete conflict with cascade)
+            commentData.deleteByPost(post);
+            // Delete the post (cascade removes images via orphanRemoval)
+            postData.delete(post);
         });
 
-        // Delete all the comments from user
+        // 3. Delete likes the user placed on other people's posts
+        postData.findAll().forEach(post -> post.removeLike(uid));
+
+        // 4. Delete comments the user made on other people's posts
         commentData.findAll().forEach(comment -> {
-            if (comment.getUser() != null
-            && comment.getUser().getUserID() == user.getUserID()) {
-                
-            notificationData.deleteByComment(comment);
+            if (comment.getUser() != null && comment.getUser().getUserID() == uid) {
+                notificationData.deleteByComment(comment);
+                commentData.delete(comment);
+            }
+        });
 
-            commentData.delete(comment);
-        }
-    });
-
-        // delete all likes
-        postData.findAll().forEach(post -> post.removeLike(user.getUserID()));
-
-        //Delete notifications involving this user
+        // 5. Delete any remaining notifications involving this user
         notificationData.deleteByRecipient(user);
         notificationData.deleteByActor(user);
 

@@ -7,6 +7,8 @@ import mainFiles.objects.User;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,13 +47,13 @@ public class AuthController {
      * @return Confirmation that the user was successfully logged in
      */
     @PostMapping("/login")
-    public String logInn(@RequestParam String email, @RequestParam String password, HttpSession session){
+    public ResponseEntity<String> logInn(@RequestParam String email, @RequestParam String password, HttpSession session){
         User user = authService.logInn(email, password);
         if (user == null){
-            return "User not found";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
         session.setAttribute("userId", user.getUserID());
-        return "User " +  session.getAttribute("userId") + " was successfully logged in";
+        return ResponseEntity.ok("User " + session.getAttribute("userId") + " was successfully logged in");
     }
 
 
