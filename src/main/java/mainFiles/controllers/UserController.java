@@ -342,6 +342,10 @@ public class UserController {
 
         User user = userService.findByID((int) session.getAttribute("userId"));
 
+        username = (username != null && username.isBlank()) ? null : username;
+        email = (email != null && email.isBlank()) ? null : email;
+        password = (password != null && password.isBlank()) ? null : password;
+
         userService.updateProfile(user, username, email, password, bio);
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -349,7 +353,7 @@ public class UserController {
         }
 
         return "Profile updated";
-}
+    }
 
 
 }
