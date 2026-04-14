@@ -193,7 +193,7 @@ public class PostController {
         if (userService.isBlocked(currentUser, userId)) {
             return List.of();
         }
-        return postService.getPostsByUserId(userId);
+        return postService.getPostsByUserId(userId, currentUser.getUserID());
     }
     
 

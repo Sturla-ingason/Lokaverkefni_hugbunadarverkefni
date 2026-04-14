@@ -268,14 +268,14 @@ public class PostService {
 
 
     @Transactional
-    public List<PostDto> getPostsByUserId(int userId) {
+    public List<PostDto> getPostsByUserId(int userId, int currentUserId) {
         List<Post> posts = postData.findByUser_UserID(userId);
         List<PostDto> postDtos = new ArrayList<>();
 
         for (Post post : posts) {
-            postDtos.add(PostDto.from(post));
+            postDtos.add(PostDto.from(post, currentUserId));
         }
 
         return postDtos;
-}
+    }
 }
