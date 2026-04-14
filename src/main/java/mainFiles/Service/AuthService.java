@@ -75,16 +75,16 @@ public class AuthService {
      * @return The logged-in user
      */
     public User logInn(String email, String password){
-        if (email == null || password == null) {
+        if(email == null || password == null){
             throw new IllegalArgumentException("Missing Input");
         }
 
         User user = userData.findByEmail(email);
-        if (user == null) {
+        if(user == null){
             throw new IllegalArgumentException("Email not registered");
         }
 
-        if (!user.getPassword().equals(password)) {
+        if(!user.getPassword().equals(password)){
             return null;
         }
 

@@ -30,7 +30,8 @@ public class User {
     private String bio;
     private int imageId;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Image image;
 
     @JsonIgnore
