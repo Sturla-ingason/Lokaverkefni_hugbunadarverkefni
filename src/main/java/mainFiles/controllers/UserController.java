@@ -5,8 +5,11 @@ import mainFiles.Service.*;
 import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -323,18 +326,37 @@ public class UserController {
      * Updates the current user's profile in one call.
      * All fields are optional — only non-null values are applied.
      */
-    @PostMapping("/update")
-    public String updateProfile(HttpSession session,
-                                @RequestParam(required = false) String username,
-                                @RequestParam(required = false) String email,
-                                @RequestParam(required = false) String password,
-                                @RequestParam(required = false) String bio) {
+   @PutMapping("/update")
+    public String updateProfile(
+            HttpSession session,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String password,
+            @RequestParam(required = false) String bio
+    ) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
+
         User user = userService.findByID((int) session.getAttribute("userId"));
         userService.updateProfile(user, username, email, password, bio);
+
         return "Profile updated";
+    }
+
+    @PutMapping(value = "/update-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String updateProfilePicture(
+            HttpSession session,
+            @RequestParam(name = "image") MultipartFile imageFile
+    ) throws IOException {
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
+        }
+
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.updateProfilePicture(user, imageFile);
+
+        return "Profile picture updated";
     }
 
 }

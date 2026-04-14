@@ -2,14 +2,18 @@ package mainFiles.Service;
 
 import jakarta.transaction.Transactional;
 import mainFiles.Data.CommentData;
+import mainFiles.Data.ImageData;
 import mainFiles.Data.PostData;
 import mainFiles.Data.UserData;
 import mainFiles.Data.NotificationData;
 import mainFiles.dto.UserDto;
+import mainFiles.objects.Image;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -25,6 +29,8 @@ public class UserService {
     private NotificationService notificationService;
     @Autowired
     private NotificationData notificationData;
+    @Autowired
+    private ImageData imageData;
 
     
     /*
@@ -359,6 +365,36 @@ public class UserService {
         if (bio != null) {
             user.setBio(bio);
         }
+        userData.save(user);
+    }
+
+    @Transactional
+    public void updateProfilePicture(User user, MultipartFile imageFile) throws IOException {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        if (imageFile == null || imageFile.isEmpty()) {
+            return;
+        }
+
+        Image image = user.getImage();
+
+        if (image == null) {
+            image = new Image();
+            image.setUser(user);
+            image.setProfilePicture(true);
+        }
+
+        image.setImageName(imageFile.getOriginalFilename());
+        image.setImageType(imageFile.getContentType());
+        image.setImageData(imageFile.getBytes());
+
+        Image savedImage = imageData.save(image);
+
+        user.setImage(savedImage);
+        user.setImageId(savedImage.getId().intValue());
+
         userData.save(user);
     }
 }
