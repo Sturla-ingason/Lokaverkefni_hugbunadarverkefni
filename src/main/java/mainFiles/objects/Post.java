@@ -47,6 +47,9 @@ public class Post {
     @Column(name = "hashtag")
     private List<String> hashtags = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "user_id")
     private List<Integer> likesOnPost = new ArrayList<>();
 
     // Adds a like to a post
