@@ -326,15 +326,14 @@ public class UserController {
      * Updates the current user's profile in one call.
      * All fields are optional — only non-null values are applied.
      */
-   @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+   @PutMapping("/update")
     public String updateProfile(
             HttpSession session,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String password,
-            @RequestParam(required = false) String bio,
-            @RequestParam(required = false, name = "image") MultipartFile imageFile
-    ) throws IOException {
+            @RequestParam(required = false) String bio
+    ) {
 
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
@@ -348,11 +347,23 @@ public class UserController {
 
         userService.updateProfile(user, username, email, password, bio);
 
-        if (imageFile != null && !imageFile.isEmpty()) {
-            userService.updateProfilePicture(user, imageFile);
+        return "Profile updated";
+    }
+
+    @PutMapping(value = "/update-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String updateProfilePicture(
+            HttpSession session,
+            @RequestParam(name = "image") MultipartFile imageFile
+    ) throws IOException {
+
+        if (session.getAttribute("userId") == null) {
+            throw new IllegalStateException("No active user found");
         }
 
-        return "Profile updated";
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        userService.updateProfilePicture(user, imageFile);
+
+        return "Profile picture updated";
     }
 
 
