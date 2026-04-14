@@ -1,6 +1,7 @@
 package mainFiles.Service;
 
 import mainFiles.Data.UserData;
+import mainFiles.dto.LoginUserView;
 import mainFiles.objects.*;
 
 import java.io.IOException;
@@ -79,14 +80,19 @@ public class AuthService {
             throw new IllegalArgumentException("Missing Input");
         }
 
-        User user = userData.findByEmail(email);
-        if(user == null){
+        LoginUserView loginUser = userData.findLoginViewByEmail(email);
+        if(loginUser == null){
             throw new IllegalArgumentException("Email not registered");
         }
 
-        if(!user.getPassword().equals(password)){
+        if(!loginUser.getPassword().equals(password)){
             return null;
         }
+
+        User user = new User();
+        user.setUserID(loginUser.getUserID());
+        user.setEmail(loginUser.getEmail());
+        user.setPassword(loginUser.getPassword());
 
         return user;
     }

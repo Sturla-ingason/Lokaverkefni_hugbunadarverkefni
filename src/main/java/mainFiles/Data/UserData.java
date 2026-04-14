@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import mainFiles.dto.LoginUserView;
+
 
 
 
@@ -83,4 +85,8 @@ public interface UserData extends JpaRepository<User, Integer> {
     @Query(value = "DELETE FROM user_followers WHERE user_id = :userId OR follower_id = :userId", nativeQuery = true)
     void deleteAllFollowerEntriesForUser(@Param("userId") int userId);
 
+
+
+    @Query("SELECT u.userID as userID, u.email as email, u.password as password FROM User u WHERE u.email = :email")
+    LoginUserView findLoginViewByEmail(@Param("email") String email);
 }
