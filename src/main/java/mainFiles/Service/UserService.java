@@ -51,10 +51,17 @@ public class UserService {
         user.getFollowers().clear();
         user.getFollowing().clear();
 
-        // Delete all posts by this user (cascades to their images and comments)
+        // Delete all posts by this user
         postData.findAllByUserId(user.getUserID()).forEach(post -> {
+            // Delete notifications linked to comments on this post first (FK constraint)
+            if (post.getComment() != null) {
+                post.getComment().forEach(comment -> notificationData.deleteByComment(comment));
+            }
+            // Delete notifications linked to the post itself
             notificationData.deleteByPost(post);
+            // Delete comments on the post
             commentData.deleteByPost(post);
+            // Delete the post (cascades to images)
             postData.delete(post);
         });
 
