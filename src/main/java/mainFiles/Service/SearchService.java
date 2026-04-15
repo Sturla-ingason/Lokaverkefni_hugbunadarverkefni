@@ -26,6 +26,7 @@ public class SearchService {
      * @Param username : The name of the user to search for.
      * return all user's with that name or with that name as a substring.
      */
+    @Transactional
     public List<UserDto> userSearch(String username){
     if (username == null || username.isBlank()) {
         return List.of();
