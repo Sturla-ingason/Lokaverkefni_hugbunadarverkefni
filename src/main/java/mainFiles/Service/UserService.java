@@ -429,14 +429,18 @@ public class UserService {
             throw new IllegalArgumentException("User not found");
         }
 
-        Image image = user.getImage();
-
-        if (image == null) {
-            image = new Image();
-            image.setUser(user);
-            image.setProfilePicture(true);
+        Image existingImage = user.getImage();
+        if (existingImage != null) {
+            user.setImage(null);
+            user.setImageId(0);
+            userData.save(user);
+            imageData.delete(existingImage);
+            imageData.flush();
         }
 
+        Image image = new Image();
+        image.setUser(user);
+        image.setProfilePicture(true);
         image.setImageName(imageFile.getOriginalFilename());
         image.setImageType(imageFile.getContentType());
         image.setImageData(imageFile.getBytes());
