@@ -156,8 +156,8 @@ public class UserController {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        User user = userService.findByID((int) session.getAttribute("userId"));
-        return user.getFollowing().stream().anyMatch(u -> u.getUserID() == userID);
+        int currentUserId = (int) session.getAttribute("userId");
+        return userService.isFollowing(currentUserId, userID);
     }
 
 
