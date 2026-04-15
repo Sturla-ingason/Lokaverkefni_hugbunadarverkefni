@@ -266,13 +266,49 @@ public class UserService {
 
 
     /*
-     * Gets all the people a user is following 
+     * Gets all the people a user is following
      * @param user : The user that we want to see who he is following.
      * @return List of users that the user follows
      */
     @Transactional
     public List<User> getAllFollowedByUser(User user) {
         return user.getFollowing();
+    }
+
+    /*
+     * Gets all followers of a user as UserDto objects.
+     * Loads everything within a single transaction to avoid LazyInitializationException.
+     * @param userId : The id of the user whose followers to fetch
+     * @return List of UserDto for each follower
+     */
+    @Transactional
+    public List<UserDto> getFollowerDtos(int userId) {
+        User user = userData.findById(userId);
+        return user.getFollowers().stream()
+            .map(f -> new UserDto(
+                f.getUserID(), f.getUsername(), f.getEmail(), f.getBio(), f.getImageId(),
+                userData.countFollowersByUserId(f.getUserID()),
+                userData.countFollowingByUserId(f.getUserID())
+            ))
+            .toList();
+    }
+
+    /*
+     * Gets all users that a user is following as UserDto objects.
+     * Loads everything within a single transaction to avoid LazyInitializationException.
+     * @param userId : The id of the user whose following list to fetch
+     * @return List of UserDto for each followed user
+     */
+    @Transactional
+    public List<UserDto> getFollowingDtos(int userId) {
+        User user = userData.findById(userId);
+        return user.getFollowing().stream()
+            .map(f -> new UserDto(
+                f.getUserID(), f.getUsername(), f.getEmail(), f.getBio(), f.getImageId(),
+                userData.countFollowersByUserId(f.getUserID()),
+                userData.countFollowingByUserId(f.getUserID())
+            ))
+            .toList();
     }
 
 

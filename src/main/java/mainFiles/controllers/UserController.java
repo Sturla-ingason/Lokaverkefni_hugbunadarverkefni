@@ -217,11 +217,11 @@ public class UserController {
      * return a list of users that follow the given user
      */
     @GetMapping("/allfollowers")
-    public List<User> getAllFollowers(HttpSession session, @RequestParam int userId) {
+    public List<UserDto> getAllFollowers(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return userService.findByID(userId).getFollowers();
+        return userService.getFollowerDtos(userId);
     }
 
 
@@ -232,11 +232,11 @@ public class UserController {
      * return a list of users that the given user follows
      */
     @GetMapping("/allfollowing")
-    public List<User> getAllFollowing(HttpSession session, @RequestParam int userId) {
+    public List<UserDto> getAllFollowing(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return userService.findByID(userId).getFollowing();
+        return userService.getFollowingDtos(userId);
     }
 
 
