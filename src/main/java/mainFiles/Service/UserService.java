@@ -374,11 +374,25 @@ public class UserService {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Missing Input");
         }
+
         User u = userData.findByUsername(username.trim());
         if (u == null) {
             throw new IllegalArgumentException("User not found");
         }
-        return UserDto.from(u);
+
+        int userId = u.getUserID();
+        int followerCount = userData.countFollowersByUserId(userId);
+        int followingCount = userData.countFollowingByUserId(userId);
+
+        return new UserDto(
+            u.getUserID(),
+            u.getUsername(),
+            u.getEmail(),
+            u.getBio(),
+            u.getImageId(),
+            followerCount,
+            followingCount
+        );
     }
 
     /*

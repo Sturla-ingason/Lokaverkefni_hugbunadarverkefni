@@ -91,10 +91,12 @@ public interface UserData extends JpaRepository<User, Integer> {
     @Query("SELECT u.userID as userID, u.email as email, u.password as password FROM User u WHERE u.email = :email")
     LoginUserView findLoginViewByEmail(@Param("email") String email);
 
-    // Test
+    // Test 
     @Query(value = "SELECT COUNT(*) FROM user_followers uf WHERE uf.user_id = :userId", nativeQuery = true)
     int countFollowersByUserId(@Param("userId") int userId);
 
     @Query(value = "SELECT COUNT(*) FROM user_following uf WHERE uf.user_id = :userId", nativeQuery = true)
     int countFollowingByUserId(@Param("userId") int userId);
+
+
 }
