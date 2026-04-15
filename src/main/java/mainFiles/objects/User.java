@@ -107,4 +107,18 @@ public class User {
     public void removeFollower(User user) {
         followers.remove(user);
     }
-}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User other = (User) o;
+        return this.userID == other.userID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(userID);
+    }
+    }

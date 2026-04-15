@@ -160,32 +160,32 @@ public class UserService {
      * @param userToFollow : The user to be followed
      */
     @Transactional
-    public void follow(User user, int IdToFollow) {
-        User userToFollow;
-        try {
-            userToFollow = userData.findById(IdToFollow);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("User to follow not found");
+    public void follow(int currentUserId, int targetUserId) {
+        User currentUser = userData.findById(currentUserId);
+        User targetUser = userData.findById(targetUserId);
+
+        if (currentUser == null || targetUser == null) {
+            throw new IllegalArgumentException("User not found");
         }
 
-        if (user.equals(userToFollow)) {
-            throw new IllegalArgumentException("A user cannot follow themselves.");
+        if (currentUser.getUserID() == targetUser.getUserID()) {
+            throw new IllegalArgumentException("You cannot follow yourself");
         }
-        user.follow(userToFollow); // Follows the user to follow
-        userToFollow.getFollowers().add(user); // Add user to the follower list of user to follow
-        // Updates both users
-        userData.save(userToFollow);
-        userData.save(user);
 
-        // notify newly followed user
-        if (userToFollow.getUserID() != user.getUserID()) {
-            notificationService.notifyFollow(
-                userToFollow.getUserID(),
-                user.getUserID()          
-            );
+        if (!currentUser.getFollowing().contains(targetUser)) {
+            currentUser.getFollowing().add(targetUser);
         }
-        
+
+        if (!targetUser.getFollowers().contains(currentUser)) {
+            targetUser.getFollowers().add(currentUser);
+        }
+
+        userData.save(currentUser);
+        userData.save(targetUser);
+
+        notificationService.notifyFollow(targetUser.getUserID(), currentUser.getUserID());
     }
+
 
 
     /*
@@ -194,21 +194,23 @@ public class UserService {
      * @param userToUnfollow : The user to unfollow
      */
     @Transactional
-    public void unfollow(User user, int IdToUnfollow) {
-        User userToUnfollow;
-        try {
-            userToUnfollow = userData.findById(IdToUnfollow);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("User to unfollow not found");
-        }
-        if (user.equals(userToUnfollow)) {
-            throw new IllegalArgumentException("A user cannot unfollow themselves.");
-        }
-        user.unfollow(userToUnfollow); // Unfollows the user to unfollow
-        userToUnfollow.getFollowers().remove(user);// Removes user from the follower list of user to unfollow
+    public void unfollow(int currentUserId, int targetUserId) {
+        User currentUser = userData.findById(currentUserId);
+        User targetUser = userData.findById(targetUserId);
 
-        userData.save(userToUnfollow);
-        userData.save(user);
+        if (currentUser == null || targetUser == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        if (currentUser.getUserID() == targetUser.getUserID()) {
+            throw new IllegalArgumentException("You cannot unfollow yourself");
+        }
+
+        currentUser.getFollowing().remove(targetUser);
+        targetUser.getFollowers().remove(currentUser);
+
+        userData.save(currentUser);
+        userData.save(targetUser);
     }
 
 

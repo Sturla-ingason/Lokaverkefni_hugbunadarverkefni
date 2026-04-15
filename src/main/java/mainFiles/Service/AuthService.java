@@ -25,7 +25,7 @@ public class AuthService {
      * @param image : the pictre the user want's to have as their profile picture
      * @return the new user we just created
      */
-    public User signUpp(String email, String password, String userName, MultipartFile[] image)throws IOException{
+    public User signUpp(String email, String password, String userName)throws IOException{
         if(email == null || password == null || userName == null){
             throw new IllegalArgumentException("Missing input");
         }
@@ -38,24 +38,6 @@ public class AuthService {
         }
 
         User user = new User(userName, email, password);
-
-        //sets profile picture for the user
-        if(image != null){
-
-            for(MultipartFile file : image){
-                if(file.isEmpty()) continue;
-
-                Image img = new Image();
-                img.setImageName(file.getOriginalFilename());
-                img.setImageType(file.getContentType());
-                img.setImageData(file.getBytes());
-                img.setProfilePicture(true);
-
-                userData.save(user);
-                user.setImage(img);
-            }
-
-        }
 
         User saved = userData.save(user);
 

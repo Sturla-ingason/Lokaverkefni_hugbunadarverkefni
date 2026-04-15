@@ -115,11 +115,12 @@ public class UserController {
      */
     @PatchMapping("/follow")
     public void follow(HttpSession session, @RequestParam int userID) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        userService.follow(user, userID);
+
+        int currentUserId = (int) session.getAttribute("userId");
+        userService.follow(currentUserId, userID);
     }
 
 
@@ -130,11 +131,12 @@ public class UserController {
      */
     @PatchMapping("/unfollow")
     public void unfollow(HttpSession session, @RequestParam int userID) {
-        User user = userService.findByID((int) session.getAttribute("userId"));
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        userService.unfollow(user, userID);
+
+        int currentUserId = (int) session.getAttribute("userId");
+        userService.unfollow(currentUserId, userID);
     }
 
 
@@ -285,11 +287,13 @@ public class UserController {
      * returns a user element of the currently logged inn user
      */
     @GetMapping("/getuser")
-    public User getUser(HttpSession session) {
+    public UserDto getUser(HttpSession session) {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return userService.findByID((int) session.getAttribute("userId"));
+
+        User user = userService.findByID((int) session.getAttribute("userId"));
+        return UserDto.from(user);
     }
 
     /*
