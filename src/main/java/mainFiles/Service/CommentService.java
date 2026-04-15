@@ -72,6 +72,7 @@ public class CommentService {
         commentData.delete(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentDto> getAllCommentsUnderPost(int postId){
 
         if (postId <= 0) {
