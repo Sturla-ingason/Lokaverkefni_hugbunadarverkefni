@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import mainFiles.dto.LoginUserView;
+import mainFiles.dto.UserDto;
 
 
 
@@ -98,5 +99,20 @@ public interface UserData extends JpaRepository<User, Integer> {
     @Query(value = "SELECT COUNT(*) FROM user_following uf WHERE uf.user_id = :userId", nativeQuery = true)
     int countFollowingByUserId(@Param("userId") int userId);
 
+    @Query("""
+    SELECT new mainFiles.dto.UserDto(
+        u.userID,
+        u.username,
+        u.email,
+        u.bio,
+        u.imageId,
+        (SELECT COUNT(f1) FROM User x1 JOIN x1.followers f1 WHERE x1.userID = u.userID),
+        (SELECT COUNT(f2) FROM User x2 JOIN x2.following f2 WHERE x2.userID = u.userID)
+    )
+    FROM User u
+    WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))
+    """)
+    List<UserDto> searchUsersAsDto(@Param("username") String username);
 
-}
+
+    }
