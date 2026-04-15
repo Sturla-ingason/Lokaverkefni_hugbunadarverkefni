@@ -355,6 +355,16 @@ public class UserService {
 
 
     /*
+     * Checks whether currentUserId follows targetUserId.
+     * Uses a direct DB query to avoid lazy-loading the full following list.
+     */
+    @Transactional
+    public boolean isFollowing(int currentUserId, int targetUserId) {
+        return userData.existsFollowing(currentUserId, targetUserId);
+    }
+
+
+    /*
      * Finds a user by their id
      * @param userId : The id of the user
      * @return The user connected to the id

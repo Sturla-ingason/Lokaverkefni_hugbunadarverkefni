@@ -99,4 +99,7 @@ public interface UserData extends JpaRepository<User, Integer> {
     @Query(value = "SELECT COUNT(*) FROM user_following uf WHERE uf.user_id = :userId", nativeQuery = true)
     int countFollowingByUserId(@Param("userId") int userId);
 
+    @Query(value = "SELECT COUNT(*) > 0 FROM user_following WHERE user_id = :userId AND following_id = :targetId", nativeQuery = true)
+    boolean existsFollowing(@Param("userId") int userId, @Param("targetId") int targetId);
+
     }
