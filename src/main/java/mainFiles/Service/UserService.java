@@ -47,6 +47,11 @@ public class UserService {
 
         int uid = user.getUserID();
 
+        // Re-load as a managed entity inside this transaction so JPA queries
+        // (deleteByRecipient, deleteByActor, delete) operate on a managed instance.
+        User managedUser = userData.findById(uid);
+        if (managedUser == null) return;
+
         // 1. Clean up all follow/block join tables via native queries (handles both sides)
         userData.deleteAllFollowingEntriesForUser(uid);
         userData.deleteAllFollowerEntriesForUser(uid);
@@ -60,9 +65,7 @@ public class UserService {
             }
             // Delete notifications for the post itself
             notificationData.deleteByPost(post);
-            // Delete comments explicitly (avoids double-delete conflict with cascade)
-            commentData.deleteByPost(post);
-            // Delete the post (cascade removes images via orphanRemoval)
+            // Delete the post — cascade (CascadeType.ALL) removes comments and images
             postData.delete(post);
         });
 
@@ -78,10 +81,10 @@ public class UserService {
         });
 
         // 5. Delete any remaining notifications involving this user
-        notificationData.deleteByRecipient(user);
-        notificationData.deleteByActor(user);
+        notificationData.deleteByRecipient(managedUser);
+        notificationData.deleteByActor(managedUser);
 
-        userData.delete(user);
+        userData.delete(managedUser);
     }
 
 
