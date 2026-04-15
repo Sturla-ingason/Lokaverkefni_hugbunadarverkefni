@@ -297,8 +297,25 @@ public class UserController {
             throw new IllegalStateException("No active user found");
         }
 
-        User user = userService.findByID((int) session.getAttribute("userId"));
-        return UserDto.from(user);
+        int userId = (int) session.getAttribute("userId");
+        User user = userService.findByID(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        int followerCount = userData.countFollowersByUserId(userId);
+        int followingCount = userData.countFollowingByUserId(userId);
+
+        return new UserDto(
+            user.getUserID(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getBio(),
+            user.getImageId(),
+            followerCount,
+            followingCount
+        );
     }
 
     /*
