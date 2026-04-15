@@ -64,7 +64,7 @@ public interface UserData extends JpaRepository<User, Integer> {
      * @Param username : the username to search by
      * return a list of all users with the username or with the username as a substring
      */
-    List<User> findByUsernameContaining(String username);
+    List<User> findByUsernameContainingIgnoreCase(String username);
 
     /*
      * Removes all rows from user_blocked where this user is either the blocker or the blocked party.

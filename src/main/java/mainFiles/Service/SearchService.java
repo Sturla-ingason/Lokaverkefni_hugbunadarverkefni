@@ -32,7 +32,7 @@ public class SearchService {
         return List.of();
     }
 
-    List<User> users = userData.findByUsernameContaining(username);
+    List<User> users = userData.findByUsernameContainingIgnoreCase(username);
     List<UserDto> dtos = new ArrayList<>();
 
     for (User u : users) {
