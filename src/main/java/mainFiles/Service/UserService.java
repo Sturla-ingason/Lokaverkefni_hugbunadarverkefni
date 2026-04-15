@@ -369,13 +369,36 @@ public class UserService {
      * @param username : The username to search for
      * @return The user connected to the username
      */
-    public List<UserDto> findByUsername(String username) {
-    if (username == null || username.isBlank()) {
-        return List.of();
-    }
+    @Transactional
+    public UserDto findByUsername(String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("Missing Input");
+        }
 
-    return userData.searchUsersAsDto(username.trim());
-}
+        String normalized = username.trim();
+        if (normalized.isEmpty()) {
+            throw new IllegalArgumentException("Missing Input");
+        }
+
+        User u = userData.findByUsername(normalized);
+        if (u == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        int userId = u.getUserID();
+        int followerCount = userData.countFollowersByUserId(userId);
+        int followingCount = userData.countFollowingByUserId(userId);
+
+        return new UserDto(
+            u.getUserID(),
+            u.getUsername(),
+            u.getEmail(),
+            u.getBio(),
+            u.getImageId(),
+            followerCount,
+            followingCount
+        );
+    }
 
     /*
      * Updates the user's profile in one call.
