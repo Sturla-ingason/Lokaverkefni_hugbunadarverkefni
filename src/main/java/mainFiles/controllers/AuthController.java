@@ -30,11 +30,10 @@ public class AuthController {
         @RequestParam("email") String email,
         @RequestParam("password") String password,
         @RequestParam("username") String userName,
-        @RequestParam(value = "image", required = false) MultipartFile[] image,
         HttpSession session
     ) throws IOException {
 
-        User user = authService.signUpp(email, password, userName, image);
+        User user = authService.signUpp(email, password, userName);
         return user;
     }
 

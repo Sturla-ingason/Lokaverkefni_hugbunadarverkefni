@@ -2,6 +2,7 @@ package mainFiles.controllers;
 
 import jakarta.servlet.http.HttpSession;
 import mainFiles.Service.*;
+import mainFiles.Data.UserData;
 import mainFiles.dto.UserDto;
 import mainFiles.objects.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -308,7 +309,24 @@ public class UserController {
         if (session.getAttribute("userId") == null) {
             throw new IllegalStateException("No active user found");
         }
-        return UserDto.from(userService.findByID(userId));
+
+        User user = userService.findByID(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        int followerCount = userData.countFollowersByUserId(userId);
+        int followingCount = userData.countFollowingByUserId(userId);
+
+        return new UserDto(
+            user.getUserID(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getBio(),
+            user.getImageId(),
+            followerCount,
+            followingCount
+        );
     }
 
     /*
