@@ -21,6 +21,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //test
+    @Autowired
+    private UserData userData;
+
 
     /*
      * Deleats a exsisting User
@@ -304,6 +308,8 @@ public class UserController {
      * @param userId  The id of the user to view
      * @return The user connected to the id
      */
+
+    //test
     @GetMapping("/profile")
     public UserDto viewUserProfileById(HttpSession session, @RequestParam int userId) {
         if (session.getAttribute("userId") == null) {
