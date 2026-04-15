@@ -291,6 +291,8 @@ public class UserController {
      * @Param session : session of the user that is currently logged inn
      * returns a user element of the currently logged inn user
      */
+
+    //test
     @GetMapping("/getuser")
     public UserDto getUser(HttpSession session) {
         if (session.getAttribute("userId") == null) {

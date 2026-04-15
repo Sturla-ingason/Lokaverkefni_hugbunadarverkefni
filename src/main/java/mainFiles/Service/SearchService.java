@@ -27,19 +27,31 @@ public class SearchService {
      * return all user's with that name or with that name as a substring.
      */
     public List<UserDto> userSearch(String username){
-        if(username == null){
-            throw new IllegalArgumentException("Now username to search by");
-        }
-        
-       List<User> users = userData.findByUsernameContaining(username);
-       List<UserDto> dtos = new ArrayList<>();
-
-        for (User u : users) {
-            dtos.add(UserDto.from(u));
-        }
-
-        return dtos;
+    if (username == null || username.isBlank()) {
+        return List.of();
     }
+
+    List<User> users = userData.findByUsernameContaining(username);
+    List<UserDto> dtos = new ArrayList<>();
+
+    for (User u : users) {
+        int userId = u.getUserID();
+        int followerCount = userData.countFollowersByUserId(userId);
+        int followingCount = userData.countFollowingByUserId(userId);
+
+        dtos.add(new UserDto(
+            u.getUserID(),
+            u.getUsername(),
+            u.getEmail(),
+            u.getBio(),
+            u.getImageId(),
+            followerCount,
+            followingCount
+        ));
+    }
+
+    return dtos;
+}
 
 
     /*
