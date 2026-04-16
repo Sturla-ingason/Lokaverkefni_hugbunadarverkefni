@@ -251,6 +251,7 @@ public class PostService {
      * @param postId : The id of the post
      * @return A list of UserDto for each user who liked the post
      */
+    @Transactional(readOnly = true)
     public List<UserDto> getPostLikers(int postId) {
         Post post = postData.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
